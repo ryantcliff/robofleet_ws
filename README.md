@@ -4,7 +4,7 @@ The complete ROS 2 workspace for **RoboFleet**, an autonomous four-wheel differe
 
 **[Read the full documentation »](https://robofleet.readthedocs.io/en/latest/)**
 
-> **Project continuity:** RoboFleet is the 2026–2027 continuation of RoboFlock. The repository/workspace still uses some legacy `roboflock` names for compatibility with the inherited ROS 2 codebase.
+> **Project continuity:** RoboFleet is the 2026–2027 continuation of RoboFlock. Some inherited ROS, runtime, configuration, and device identifiers still use `roboflock` for compatibility with the existing system.
 
 <!-- Add a short demo clip or photo of the robot here:
 ![RoboFleet](docs/roboflock.jpg) -->
@@ -31,7 +31,7 @@ src/    ROS 2 packages (nodes, controllers, launch, config)
 ## Build
 Standard ROS 2 colcon workspace:
 ```bash
-cd roboflock_ws
+cd robofleet_ws
 colcon build
 source install/setup.bash
 ```
