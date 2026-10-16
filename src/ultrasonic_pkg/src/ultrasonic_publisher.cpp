@@ -5,6 +5,7 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include <limits>
 #include <functional>
 #include <stdlib.h>
 #include <errno.h>
@@ -46,13 +47,7 @@ UltrasonicPublisher::UltrasonicPublisher(const rclcpp::NodeOptions & options)
 	sensor_data_.resize(frame_ids_.size());
 	sensor_msgs_.resize(frame_ids_.size());
 	
-	if (!initialize_sensors())
-	{
-		RCLCPP_ERROR(this->get_logger(), 
-			"Failed to initialize ultrasonic sensors."
-		);
-		return;
-	}
+	if (!initialize_sensors()) { return; }
 	
 	int period_ms = static_cast<int>(1000.0 / update_rate_);
 	timer_ = this->create_wall_timer(
@@ -74,23 +69,17 @@ bool
 UltrasonicPublisher::initialize_sensors()
 {
 	auto ret = init_arduino();
-	switch (ret)
+	if (ret == 0)
 	{
-	case -1:
-		RCLCPP_ERROR(this->get_logger(), "Failed to open.\n");
-		break;
-	case -2:
-		RCLCPP_ERROR(this->get_logger(), "Failed to get attributes.\n");
-		break;
-	case -3:
-		RCLCPP_ERROR(this->get_logger(), "Failed to configure.\n");
-		break;
-	default:
-		RCLCPP_INFO(this->get_logger(), "Successfully initialized Arduino.\n");
-		break;
+		RCLCPP_INFO(this->get_logger(), "Successfully initialized Arduino connection.");
 	}
-	
-	if (ret < 0) { return false; }
+	else
+	{
+		RCLCPP_ERROR(this->get_logger(),
+			strerror(ret)
+		);
+		return false;
+	}
 	
 	for (size_t i = 0; i < frame_ids_.size(); i++)
 	{
@@ -100,7 +89,7 @@ UltrasonicPublisher::initialize_sensors()
 		message.min_range = min_range_;
 		message.max_range = max_range_;
 		message.header.frame_id = frame_ids_[i];
-		sensor_msgs_.push_back(message);
+		sensor_msgs_[i] = message;  // already sized in the constructor
 	}
 	
 	return true;
@@ -270,16 +259,20 @@ UltrasonicPublisher::publish_data()
 		sensor_msgs_[i].header.stamp = now;
 		if (sensor_data_[i] <= 200)
 		{
-			sensor_msgs_[i].range = sensor_data_[i];
+			// The Arduino reports centimeters; 0 means no echo, which REP-117
+			// publishes as +inf (nothing in range) rather than an obstacle at 0 m.
+			sensor_msgs_[i].range = sensor_data_[i] == 0
+				? std::numeric_limits<float>::infinity()
+				: sensor_data_[i] / 100.0f;
 			publishers_[i]->publish(sensor_msgs_[i]);
-			RCLCPP_INFO(this->get_logger(),
+			RCLCPP_DEBUG(this->get_logger(),
 				"Published %s: range=%f\n",
 				frame_ids_[i].c_str(), sensor_msgs_[i].range
 			);
 		}
 		else
 		{
-			RCLCPP_INFO(this->get_logger(),
+			RCLCPP_DEBUG(this->get_logger(),
 				"Invalid data from %s\n",
 				frame_ids_[i].c_str()
 			);
@@ -292,6 +285,10 @@ void
 UltrasonicPublisher::timer_callback()
 {
 	get_arduino_data(&sensor_data_[LEFT], &sensor_data_[CENTER], &sensor_data_[RIGHT]);	
+	RCLCPP_DEBUG(this->get_logger(),
+		"Received data - Left: %d, Center: %d, Right: %d\n",
+		sensor_data_[LEFT], sensor_data_[CENTER], sensor_data_[RIGHT]
+	);
 	publish_data();
 }
 		

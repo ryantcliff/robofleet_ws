@@ -1,332 +1,193 @@
-#!/usr/bin/env python3
+"""Bring up hardware, mapping (or a saved map), navigation and, optionally, beacon following."""
 
 import os
+
 from launch import LaunchDescription
-import launch
 from launch.actions import (
-	DeclareLaunchArgument,
-	EmitEvent,
-	LogInfo,
-	ExecuteProcess,
-	RegisterEventHandler,
-	TimerAction,
-	GroupAction,
-	IncludeLaunchDescription,
-	SetEnvironmentVariable
+    DeclareLaunchArgument, GroupAction, IncludeLaunchDescription, OpaqueFunction,
 )
 from launch.conditions import IfCondition
-from launch.event_handlers import (
-	OnExecutionComplete,
-	OnProcessExit,
-	OnProcessIO,
-	OnProcessStart,
-	OnShutdown
-)
-from launch.events import Shutdown
-from launch.substitutions import (
-	EnvironmentVariable,
-	FindExecutable,
-	LaunchConfiguration,
-	LocalSubstitution,
-	PythonExpression,
-	PathJoinSubstitution,
-	TextSubstitution,
-	Command
-)
-from launch_ros.substitutions import FindPackageShare
-from launch_ros.parameter_descriptions import ParameterValue
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
-from ament_index_python.packages import get_package_share_directory
+from nav2_common.launch import RewrittenYaml
+
+
+def include(package, filename, arguments=None):
+    return IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(PathJoinSubstitution([
+            FindPackageShare(package), 'launch', filename])),
+        launch_arguments=(arguments or {}).items(),
+    )
+
+
+def enabled(context, name):
+    return LaunchConfiguration(name).perform(context).lower() == 'true'
+
+
+def map_source(context):
+    # Evaluate only the selected branch, so navigation-only debugging does not
+    # require SLAM or a saved map installed/configured.
+    if not enabled(context, 'enable_mapping'):
+        return []
+    if LaunchConfiguration('slam').perform(context).lower() == 'true':
+        return [include('bring_up', 'slam.launch.py', {
+            'use_sim_time': LaunchConfiguration('use_sim_time'),
+        })]
+    map_file = LaunchConfiguration('map').perform(context)
+    if enabled(context, 'follow') and not map_file:
+        return []  # Outdoor following plans on the live lidar costmap only.
+    if not os.path.isfile(map_file):
+        raise RuntimeError('slam:=false requires map:=/absolute/path/to/map.yaml')
+    clock = ParameterValue(LaunchConfiguration('use_sim_time'), value_type=bool)
+    return [
+        Node(package='nav2_map_server', executable='map_server',
+             name='map_server', output='screen',
+             parameters=[{'yaml_filename': map_file, 'use_sim_time': clock}]),
+        Node(package='nav2_lifecycle_manager', executable='lifecycle_manager',
+             name='lifecycle_manager_map', output='screen', parameters=[{
+                 'use_sim_time': clock,
+                 'autostart': ParameterValue(
+                     LaunchConfiguration('autostart'), value_type=bool),
+                 'node_names': ['map_server'],
+             }]),
+    ]
+
+
+def navigation(context):
+    params_file = LaunchConfiguration('params_file')
+    if enabled(context, 'follow'):
+        if enabled(context, 'slam'):
+            raise RuntimeError(
+                'follow:=true requires slam:=false: beacon goals need the GPS-aligned map frame')
+        params_file = RewrittenYaml(
+            source_file=params_file, convert_types=True, param_rewrites={
+                # No prior map outdoors: plan on the rolling lidar costmap.
+                'global_costmap.global_costmap.ros__parameters.static_layer.enabled': 'False',
+                # The truncated follow path ends in an arbitrary heading; do not
+                # turn in place to match it.
+                'controller_server.ros__parameters.goal_checker.yaw_goal_tolerance': '3.14',
+            })
+    return [include('bring_up', 'nav2.launch.py', {
+        'autostart': LaunchConfiguration('autostart'),
+        'use_sim_time': LaunchConfiguration('use_sim_time'),
+        'params_file': params_file,
+    })]
+
+
+def sim_nodes(context):
+    if not enabled(context, 'sim'):
+        return []
+    if enabled(context, 'hardware'):
+        raise RuntimeError('sim:=true replaces the drivers; also set hardware:=false')
+    # Same localization and robot model as hardware; fake sensors and motors.
+    nodes = [
+        include('bring_up', 'robot_state_publisher.launch.py'),
+        include('bring_up', 'localization.launch.py', {
+            'gps_localization': 'false' if enabled(context, 'slam') else 'true',
+            'use_sim_time': LaunchConfiguration('use_sim_time'),
+        }),
+        Node(package='bring_up', executable='fake_robot', name='fake_robot', output='screen',
+             parameters=[{'cmd_vel_topic':
+                          'cmd_vel_mux' if enabled(context, 'follow') else 'cmd_vel'}]),
+    ]
+    if enabled(context, 'follow') and enabled(context, 'fake_beacon'):
+        nodes.append(Node(package='bring_up', executable='fake_beacon', name='fake_beacon',
+                          output='screen'))
+    return nodes
+
+
+def follow_nodes(context):
+    if not enabled(context, 'follow'):
+        return []
+    twist_mux_params = PathJoinSubstitution([
+        FindPackageShare('bring_up'), 'config', 'twist_mux.yaml'])
+    initial_mode = 'follow' if enabled(context, 'follow_enabled') else 'idle'
+    nodes = [
+        # Beacon and home station both go through beacon_goalpose (/fromLL, 20 m
+        # clamp); mission_manager relays the active one to Nav2's /goal_update.
+        Node(package='beacon_pkg', executable='beacon_goalpose', name='beacon_goalpose',
+             output='screen', remappings=[('/goal_update', '/beacon/goal')]),
+        Node(package='beacon_pkg', executable='beacon_goalpose', name='home_goalpose',
+             output='screen', remappings=[('/gps/beacon/fix', '/home/fix'),
+                                          ('/beacon/map_pose', '/home/map_pose'),
+                                          ('/goal_update', '/home/goal')]),
+        Node(package='bring_up', executable='mission_manager', name='mission_manager',
+             output='screen', parameters=[{'initial_mode': initial_mode}]),
+        Node(package='twist_mux', executable='twist_mux', name='twist_mux', output='screen',
+             parameters=[twist_mux_params], remappings=[('cmd_vel_out', 'cmd_vel_mux')]),
+    ]
+    if enabled(context, 'hardware'):
+        # Motors only start in follow mode, and stay idle until e_stop is armed.
+        nodes += [
+            Node(package='joy', executable='joy_node', name='joy_node', output='screen'),
+            Node(package='bring_up', executable='e_stop', name='e_stop', output='screen'),
+            Node(package='bring_up', executable='ps4_teleop', name='ps4_teleop',
+                 output='screen', parameters=[{'cmd_vel_topic': 'cmd_vel_joy'}]),
+            Node(package='bring_up', executable='ultrasonic_estop', name='ultrasonic_estop',
+                 output='screen'),
+            Node(package='bring_up', executable='diff_drive_controller',
+                 name='diff_drive_controller', output='screen',
+                 parameters=[{'cmd_vel_topic': 'cmd_vel_mux'}]),
+        ]
+        if enabled(context, 'station'):
+            nodes.append(Node(
+                package='bring_up', executable='meshtastic_bridge', name='meshtastic_bridge',
+                output='screen', parameters=[{
+                    'port': LaunchConfiguration('meshtastic_port'),
+                    'home_node_id': ParameterValue(
+                        LaunchConfiguration('home_node_id'), value_type=str),
+                }]))
+    return nodes
 
 
 def generate_launch_description():
-	# Paths to launch files >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	imu_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'mpu9250.launch.py'
-	)
-	
-	lidar_launch_file = os.path.join(
-		get_package_share_directory('rplidar_ros'),
-		'launch',
-		'rplidar_a1_launch.py'
-	)
-	
-	ultrasonic_launch_file = os.path.join(
-		get_package_share_directory('ultrasonic_pkg'),
-		'launch',
-		'ultrasonic_publisher.launch.py'
-	)
-		
-	# motor_launch_file = os.path.join(
-	# 	get_package_share_directory('bring_up'),
-	# 	'bring_up',
-	# 	'diff_drive_controller.py'
-	# )
-	
-	beacon_launch_file = os.path.join(
-		get_package_share_directory('beacon_pkg'),
-		'launch',
-		'beacon_receiver.launch.py'
-	)
-	
-	goalpose_launch_file = os.path.join(
-		get_package_share_directory('beacon_pkg'),
-		'launch',
-		'beacon_goalpose.launch.py'
-	)
-	
-	robot_gps_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'robot_gps.launch.py'
-	)
-	
-	laser_odom_launch_file = os.path.join(
-		get_package_share_directory('rf2o_laser_odometry'),
-		'launch',
-		'rf2o_laser_odometry.launch.py'
-	)
-	
-	nav2_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'nav2.launch.py'
-	)
-	
-	description_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'robot_state_publisher.launch.py'
-	)
-	
-	localization_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'localization.launch.py'
-	)
-	
-	slam_launch_file = os.path.join(
-		get_package_share_directory('bring_up'),
-		'launch',
-		'slam.launch.py'
-	)
-	
-	
-	# Launch args >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	declare_autostart = DeclareLaunchArgument(
-		'autostart',
-		default_value='true',
-		description='Automatically start the navigation stack'
-	)
-	
-	declare_slam = DeclareLaunchArgument(
-		'slam',
-		default_value='true',
-		description='Run SLAM if true, else use existing map'
-	)
-	
-	declare_use_xacro = DeclareLaunchArgument(
-		'use_xacro',
-		default_value='true',
-		description='If true, use xacro to process the URDF'
-	)
-	
-	urdf_file = os.path.join(
-    get_package_share_directory('urdf_description'),
-    'urdf',
-    'URDF.xacro'
-	)	
-    
-	# 0.) Static Transforms >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	
-	static_tf_node = GroupAction([
-		LogInfo(msg="*** Starting Static Transforms ***"),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(description_launch_file),
-		),
-	])
-	
-	
-	# 1.) Beacon/GPS System >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	gps_nodes = GroupAction([
-		LogInfo(msg="*** Starting GPS and Beacon Connection ***"),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(beacon_launch_file),
-		),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(robot_gps_launch_file),
-		),
-	])
-	
-
-	# 2.) Sensor nodes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	sensor_nodes = GroupAction([
-		LogInfo(msg='*** Starting Sensor Nodes ***'),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(imu_launch_file)
-		),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(lidar_launch_file),
-		),
-        
-        IncludeLaunchDescription(
-        	PythonLaunchDescriptionSource(ultrasonic_launch_file),
-        )
-	])
-	
-	
-	# 3.) Robot Localization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	
-	localization_nodes = GroupAction([
-		LogInfo(msg="*** Starting Localization ***"),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(localization_launch_file),
-		),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(laser_odom_launch_file)
-		),
-	])
-	
-	
-	# 4.) SLAM Toolbox >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	
-	slam_node = GroupAction([
-		LogInfo(msg="*** Starting SLAM Toolbox ***"),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(slam_launch_file),
-		),
-	])
-	
-	
-	# 5.) Motor Controller >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	
-	# motor_node = GroupAction([
-	# 	LogInfo(msg="*** Starting Motor Controller ***"),
-		
-	# 	IncludeLaunchDescription(
-	# 		PythonLaunchDescriptionSource(motor_launch_file),
-	# 	),
-	# ])
-	
-	
-	# 6.) Nav2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	
-	nav2_node = GroupAction([
-		LogInfo(msg="*** Starting Nav2 ***"),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(nav2_launch_file),
-		),
-		
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(goalpose_launch_file),
-		),
-	])
-	
-	
-	return launch.LaunchDescription([
-		declare_autostart,
-		declare_slam,
-		declare_use_xacro,
-	
-		static_tf_node,	
-		gps_nodes,
-		TimerAction(
-            period=3.0,
-            actions=[sensor_nodes]
-        ),
- 
-        TimerAction(
-            period=6.0,
-            actions=[localization_nodes]
-        ),
- 
-        TimerAction(
-            period=10.0,
-            actions=[slam_node]
-        ),
- 
-        # TimerAction(
-        #     period=14.0,
-        #     actions=[motor_node]
-        # ),
- 
-        TimerAction(
-            period=18.0,
-            actions=[nav2_node]
-        ),
+    return LaunchDescription([
+        DeclareLaunchArgument('autostart', default_value='true'),
+        DeclareLaunchArgument('use_sim_time', default_value='false'),
+        DeclareLaunchArgument('hardware', default_value='true', choices=['true', 'false'],
+                              description='Start sensors, GPS and localization'),
+        DeclareLaunchArgument('enable_mapping', default_value='true', choices=['true', 'false'],
+                              description='Start SLAM or the saved-map server'),
+        DeclareLaunchArgument('slam', default_value='true', choices=['true', 'false']),
+        DeclareLaunchArgument('map', default_value='', description='Saved map YAML when slam=false'),
+        DeclareLaunchArgument('params_file', default_value=PathJoinSubstitution([
+            FindPackageShare('bring_up'), 'config', 'nav2_params.yaml'])),
+        DeclareLaunchArgument('follow', default_value='false', choices=['true', 'false'],
+                              description='Follow the GPS beacon (requires slam:=false)'),
+        DeclareLaunchArgument('sim', default_value='false', choices=['true', 'false'],
+                              description='Fake robot and sensors (with hardware:=false)'),
+        DeclareLaunchArgument('fake_beacon', default_value='true', choices=['true', 'false'],
+                              description='With sim and follow: walk a fake beacon'),
+        DeclareLaunchArgument('follow_enabled', default_value='true', choices=['true', 'false'],
+                              description='Start in follow mode (else idle); change with '
+                                          '/station/command follow|home|stop'),
+        DeclareLaunchArgument('station', default_value='false', choices=['true', 'false'],
+                              description='With hardware: Meshtastic bridge to the home station'),
+        DeclareLaunchArgument('meshtastic_port', default_value='/dev/meshtastic',
+                              description='Serial device of the robot Meshtastic node'),
+        DeclareLaunchArgument('home_node_id', default_value='!6c743480',
+                              description='Meshtastic node number or !hex id of the home station'),
+        DeclareLaunchArgument('imu', default_value='mpu9250', choices=['mpu9250', 'bno085'],
+                              description='IMU driver (mpu9250 has no real heading)'),
+        GroupAction(condition=IfCondition(LaunchConfiguration('hardware')), actions=[
+            include('bring_up', 'robot_state_publisher.launch.py'),
+            include('beacon_pkg', 'beacon_receiver.launch.py'),
+            include('bring_up', 'robot_gps.launch.py'),
+            include('bring_up', 'imu.launch.py', {'imu': LaunchConfiguration('imu')}),
+            include('rplidar_ros', 'rplidar_a1_launch.py'),
+            include('ultrasonic_pkg', 'ultrasonic_publisher.launch.py'),
+            include('bring_up', 'localization.launch.py', {
+                'gps_localization': PythonExpression([
+                    "'false' if '", LaunchConfiguration('slam'), "' == 'true' else 'true'"]),
+                'use_sim_time': LaunchConfiguration('use_sim_time'),
+            }),
+            include('bring_up', 'rf2o_laser_odometry.launch.py'),
+        ]),
+        OpaqueFunction(function=map_source),
+        OpaqueFunction(function=navigation),
+        OpaqueFunction(function=sim_nodes),
+        OpaqueFunction(function=follow_nodes),
     ])
-		
-	# 	RegisterEventHandler(
-	# 		event_handler=OnProcessIO(
-	# 			target_action=sensor_nodes,
-	# 			on_stdout=lambda event: LogInfo(
-	# 				msg=f"Found: {event.text.decode()}"
-	# 			),
-	# 			on_stdout_regex=r"*Ultrasonic Publisher initialized*",
-	# 			on_start=localization_nodes
-	# 		)
-	# 	),
-		
-	# 	RegisterEventHandler(
-	# 		event_handler=OnProcessIO(
-	# 			target_action=localization_nodes,
-	# 			on_stdout=lambda event: LogInfo(
-	# 				msg=f"Found: {event.text.decode()}"
-	# 			),
-	# 			on_stdout_regex=r"*Localization nodes initialized*",
-	# 			on_start=slam_node
-	# 		)
-	# 	),
-		
-	# 	RegisterEventHandler(
-	# 		event_handler=OnProcessIO(
-	# 			target_action=slam_node,
-	# 			on_stdout=lambda event: LogInfo(
-	# 				msg=f"Found: {event.text.docode()}"
-	# 			),
-	# 			on_stdout_regex=r"*SLAM toolbox node intialized*",
-	# 			on_start=motor_node
-	# 		)
-	# 	),
-		
-	# 	RegisterEventHandler(
-	# 		event_handler=OnProcessIO(
-	# 			target_action=motor_node,
-	# 			on_stdout=lambda event: LogInfo(
-	# 				msg=f"Found: {event.text.decode()}"
-	# 			),
-	# 			on_stdout_regex=r"Motors initialized*",
-	# 			on_start=nav2_node
-	# 		)
-	# 	),
-		
-	# 	RegisterEventHandler(
-	# 		event_handler=OnProcessIO(
-	# 			target_action=nav2_node,
-	# 			on_stdout=lambda event: LogInfo(
-	# 				msg=f"Found: {event.text.decode()}"
-	# 			),
-	# 			on_stdout_regex=r"Nav2 initialized*",
-	# 			on_start=None
-	# 		)
-	# 	)
-				
-    # ])
-	
-	
-if __name__ == '__main__':
-	generate_launch_description()
