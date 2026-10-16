@@ -15,21 +15,24 @@ Current hardware assignment
      - Status
    * - Compute
      - NVIDIA Jetson Orin Nano
-     - :inherited:`Inherited`
-   * - Robot GNSS
-     - u-blox ZED-F9P over USB
+     - :inherited:`Inherited / retain`
+   * - FleetBot GNSS
+     - u-blox ZED-F9P (SparkFun GPS-RTK2) over USB
      - :ready:`Integrated`
-   * - Beacon GNSS
-     - u-blox NEO-M8P -> HC-12 transmitter
-     - :ready:`Software path present`
+   * - RoboBeacon GNSS
+     - u-blox NEO-M8P-2 -> HC-12 transmitter
+     - :ready:`Configured / software path present`
    * - IMU
-     - Adafruit BNO085 on I2C
-     - :planned:`Upgrade`
+     - BNO085-class IMU; Adafruit #4754 is the preferred board
+     - :planned:`Required upgrade`
    * - LiDAR
-     - RPLIDAR; IP-rated S2-class replacement planned
-     - :planned:`Upgrade`
+     - RPLIDAR S2 30 m, IP65
+     - :planned:`Planned replacement for A1-class scanner`
+   * - Short-range safety
+     - Existing ultrasonic sensor array / microcontroller
+     - :inherited:`Retain`
    * - Motors
-     - ODrive-controlled BLDC drivetrain
+     - ODrive-controlled four-BLDC drivetrain
      - :inherited:`Inherited`
 
 BNO085 wiring target
@@ -49,6 +52,18 @@ output. Verify the actual Linux bus and device address:
 
    i2cdetect -l
    sudo i2cdetect -y -r 1
+
+RPLIDAR replacement
+-------------------
+
+The requirements document identifies the **RPLIDAR S2 30 m (IP65)** as the
+planned weather-resistant replacement for the inherited A1-class scanner.
+After installation:
+
+* confirm the USB adapter's actual vendor/product ID;
+* update the udev rule if the new adapter does not match the inherited CP2102 rule;
+* update the required serial baud rate for the purchased S2 model;
+* verify ``/scan``, timestamps, frame ID, and Nav2 obstacle behavior before field testing.
 
 Stable device names
 -------------------
