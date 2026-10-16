@@ -1,0 +1,22 @@
+/* RoboFleet additions on top of the Read the Docs theme. */
+.wy-side-nav-search { background: #20242a; }
+.wy-side-nav-search > a,
+.wy-side-nav-search .wy-dropdown > a { font-weight: 700; }
+
+.rst-content .inherited,
+.rst-content .ready,
+.rst-content .planned {
+  display: inline-block;
+  padding: .12rem .45rem;
+  margin-left: .15rem;
+  border-radius: 999px;
+  font-size: .82em;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.rst-content .inherited { background: #e9ecef; color: #343a40; }
+.rst-content .ready { background: #dff3e4; color: #145a2a; }
+.rst-content .planned { background: #fff0cf; color: #745000; }
+.rst-content table.docutils td,
+.rst-content table.docutils th { white-space: normal; }
+.rst-content code.literal { word-break: break-word; }
