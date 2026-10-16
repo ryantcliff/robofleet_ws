@@ -1,6 +1,6 @@
 # RoboFleet — Autonomous Mobile Robot (ROS 2)
 
-The complete ROS 2 workspace for **RoboFleet**, an autonomous four-wheel differential-drive robot that navigates in real time by fusing LiDAR and GPS. This repo holds the source; the full write-up, setup, and architecture live in the documentation site below.
+The complete ROS 2 workspace for **RoboFleet**, an autonomous mobile robot platform whose 2026-2027 required delivery is one FleetBot that follows a designated GPS RoboBeacon using ROS 2 navigation and localization. This repo holds the source; the full write-up, setup, and architecture live in the documentation site below.
 
 **[Read the full documentation »](https://robofleet.readthedocs.io/en/latest/)**
 
@@ -16,9 +16,9 @@ https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed
 - Autonomous navigation with **Nav2**, **SLAM**, and `robot_localization`, fusing **LiDAR + GPS**.
 - Custom **ROS 2 nodes** for 2D LiDAR visualization and a differential-drive controller interfaced with **ODrive** motor modules.
 - Microcontroller-driven **ultrasonic sensing** as an independent obstacle-detection failsafe.
-- **Beacon following**: drives after a person carrying a GPS beacon and stops 3 m short.
-- **Return home** to a Meshtastic home station, even after the station is moved.
-- Runs on an **NVIDIA Jetson Orin Nano** with a custom-wired power and motor-driver stack.
+- **RoboBeacon following**: follows a person carrying the GPS RoboBeacon while maintaining the formal 1.5-3.0 m stand-off range (the current follow target is 3 m).
+- **Return home / Meshtastic** capabilities remain in the inherited stack, but are optional for the current requirements unless the scope is formally revised.
+- Runs on an **NVIDIA Jetson Orin Nano** with a custom-wired power and motor-driver stack.\n- **Weather protection requirement** covers supervised light rain, incidental splashes, and wind-carried alkaline dust; the complete robot is not claimed to have a formal IP rating.
 
 ## Stack
 ROS 2 Humble · C++ / Python · Nav2 · SLAM · robot_localization · ODrive · LiDAR · GPS (u-blox) · HC-12 · Meshtastic · NVIDIA Jetson Orin Nano
