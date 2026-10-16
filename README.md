@@ -1,11 +1,13 @@
-# Roboflock — Autonomous Mobile Robot (ROS 2)
+# RoboFleet — Autonomous Mobile Robot (ROS 2)
 
-The complete ROS 2 workspace for **Roboflock**, an autonomous four-wheel differential-drive robot that navigates in real time by fusing LiDAR and GPS. This repo holds the source; the full write-up, setup, and architecture live in the documentation site below.
+The complete ROS 2 workspace for **RoboFleet**, an autonomous four-wheel differential-drive robot that navigates in real time by fusing LiDAR and GPS. This repo holds the source; the full write-up, setup, and architecture live in the documentation site below.
 
-**[Read the full documentation »](https://roboflock-documentation.readthedocs.io/en/latest/)**
+**[Read the full documentation »](https://robofleet.readthedocs.io/en/latest/)**
+
+> **Project continuity:** RoboFleet is the 2026–2027 continuation of RoboFlock. The repository/workspace still uses some legacy `roboflock` names for compatibility with the inherited ROS 2 codebase.
 
 <!-- Add a short demo clip or photo of the robot here:
-![Roboflock](docs/roboflock.jpg) -->
+![RoboFleet](docs/roboflock.jpg) -->
 
 Here's a demo of the robot running SLAM:
 https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed
@@ -33,7 +35,7 @@ cd roboflock_ws
 colcon build
 source install/setup.bash
 ```
-See the [documentation](https://roboflock-documentation.readthedocs.io/en/latest/) for dependencies, hardware setup, and launch instructions.
+See the [documentation](https://robofleet.readthedocs.io/en/latest/) for dependencies, hardware setup, and launch instructions.
 
 ## Debug navigation without peripherals (ROS 2 Humble)
 
