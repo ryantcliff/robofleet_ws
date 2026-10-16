@@ -2,6 +2,8 @@
 
 This directory is the Sphinx source for the 2026–2027 RoboFleet documentation.
 
+Published site: https://robofleet.readthedocs.io/en/latest/
+
 ## Local preview
 
 ```bash
