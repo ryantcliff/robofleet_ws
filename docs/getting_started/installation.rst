@@ -1,9 +1,10 @@
 Installation & Build
 ====================
 
-RoboFleet continues to use the existing ROS 2 Humble workspace. The GitHub
-repository still uses the legacy ``roboflock_ws`` name; the public project name
-is **RoboFleet**.
+RoboFleet continues to use the existing ROS 2 Humble software stack. The GitHub
+repository and recommended local workspace directory are now named
+``robofleet_ws``. Some inherited runtime/configuration identifiers retain the
+``roboflock`` name for compatibility.
 
 Workspace build
 ---------------
@@ -11,7 +12,7 @@ Workspace build
 .. code-block:: bash
 
    source /opt/ros/humble/setup.bash
-   cd ~/roboflock_ws
+   cd ~/robofleet_ws
    rosdep install --from-path src --rosdistro humble -y
    colcon build --symlink-install --executor sequential
    source install/setup.bash
