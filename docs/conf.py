@@ -28,8 +28,8 @@ html_theme_options = {
 html_context = {
     "display_github": True,
     "github_user": "ryantcliff",
-    "github_repo": "roboflock_ws",
-    "github_version": os.environ.get("READTHEDOCS_GIT_IDENTIFIER", "robofleet-documentation"),
+    "github_repo": "robofleet_ws",
+    "github_version": os.environ.get("READTHEDOCS_GIT_IDENTIFIER", "main"),
     "conf_py_path": "/docs/",
 }
 
