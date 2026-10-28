@@ -121,6 +121,12 @@ def states(node, bus):
     return {name: dev(node, bus, name).state for name in node.serials}
 
 
+def present_states(bus, node):
+    """States of the ODrives that were ever found (a missing one has no device)."""
+    return {name: bus.devices[serial].state
+            for name, serial in node.serials.items() if serial in bus.devices}
+
+
 def forward(node):
     msg = Twist()
     msg.linear.x = 0.5
@@ -183,3 +189,65 @@ def test_shutdown_with_a_lost_odrive_does_not_raise(node, bus):
     dev(node, bus, 'RL').lost = True
     node._stop_motors()
     assert states(node, bus)['FR'] == IDLE
+
+
+@pytest.fixture
+def make_node(bus):
+    """Build the node after choosing which ODrives are missing at startup."""
+    rclpy.init()
+    nodes = []
+
+    def make(unplugged=()):
+        module = importlib.reload(importlib.import_module('bring_up.diff_drive_controller'))
+        for name in unplugged:
+            bus.unplugged.add(module.SERIAL_NUMBERS[name])
+        node = module.DiffDriveController()
+        node.serials = module.SERIAL_NUMBERS
+        nodes.append(node)
+        return node
+
+    try:
+        yield make
+    finally:
+        for node in nodes:
+            node.destroy_node()
+        rclpy.try_shutdown()
+
+
+def test_startup_without_an_odrive_does_not_hang_and_stays_idle(make_node, bus):
+    node = make_node(unplugged=['RR'])  # used to block in find_sync() forever
+    assert node._lost == {'RR'}
+    assert node._fault
+    assert node.stopped
+    assert present_states(bus, node) == {'FR': IDLE, 'FL': IDLE, 'RL': IDLE}
+
+    node._e_stop_cb(Bool(data=False))  # Options with RR still missing
+    assert node.stopped
+    assert CLOSED_LOOP not in present_states(bus, node).values()
+
+
+def test_odrive_missing_at_startup_needs_cross_then_options_once_found(make_node, bus):
+    node = make_node(unplugged=['RR'])
+    node._e_stop_cb(Bool(data=False))
+    assert node.stopped
+
+    bus.unplugged.clear()
+    node._reconnect()
+    assert not node._lost
+    assert states(node, bus)['RR'] == IDLE
+
+    node._e_stop_cb(Bool(data=False))  # still reports released: stay idle
+    assert node.stopped
+    node._e_stop_cb(Bool(data=True))   # Cross
+    node._e_stop_cb(Bool(data=False))  # Options
+    assert not node.stopped
+    assert set(states(node, bus).values()) == {CLOSED_LOOP}
+
+
+def test_startup_with_every_odrive_missing_stays_stopped(make_node, bus):
+    node = make_node(unplugged=['FR', 'FL', 'RR', 'RL'])
+    assert node._lost == {'FR', 'FL', 'RR', 'RL'}
+    node._e_stop_cb(Bool(data=False))
+    forward(node)
+    assert node.stopped
+    assert not bus.devices
