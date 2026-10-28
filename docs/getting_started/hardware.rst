@@ -3,6 +3,23 @@ Hardware Commissioning
 
 Commission one subsystem at a time before running autonomous follow mode.
 
+
+Physical inventory and electrical hold (2026-10-28)
+---------------------------------------------------
+
+See :doc:`../project/hardware_inventory` for the team-observed parts,
+:doc:`../project/hardware_photo_findings` for physical inspection and
+:doc:`../project/hardware_audit_checklist` for verification steps.
+
+.. warning::
+
+   The observed ODESC V4.2 motor controllers show 24 V markings while the
+   existing seven-series motor battery can reach 29.4 V fully charged.
+   Confirm the actual safe input rating of all four controllers before
+   reconnecting motor power. The currently observed scanner is RPLIDAR
+   A1M8; RPLIDAR S2 remains a planned upgrade. The required BNO085 is
+   not confirmed installed.
+
 Current hardware assignment
 ---------------------------
 
