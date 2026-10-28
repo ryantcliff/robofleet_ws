@@ -1,46 +1,47 @@
 RoboFleet Documentation
 =======================
 
-**RoboFleet** is the 2026-2027 continuation of the autonomous rover previously
-known as **RoboFlock**. We are building on the inherited mechanical
-and ROS 2 platform rather than restarting from scratch.
+RoboFleet is our 2026-2027 continuation of **RoboFlock**, the autonomous rover
+built by the previous team. We kept the chassis and the ROS 2 software, and we
+are validating, repairing and extending them rather than starting over.
 
-The broader RoboFleet concept is a group of **FleetBots** able to follow a
-designated GPS **RoboBeacon**. The required 2026-2027 delivery is one working
-FleetBot that reliably follows the RoboBeacon outdoors while meeting the formal
-safety and weather-protection requirements.
+The long-term idea is a group of **FleetBots** that each follow a person
+carrying a GPS **RoboBeacon**. What we owe our client this year is narrower: one
+FleetBot that follows the RoboBeacon outdoors, can be stopped by an operator,
+and tolerates light rain and dust.
 
-Project lineage
----------------
+Where the project came from
+---------------------------
 
 **Project Dust Runners**
-   Earlier distributed-control prototype using multiple microcontrollers and UWB tracking.
+   The earliest prototype. It used several microcontrollers and UWB tracking.
 
 **RoboFlock**
-   Transitioned to a Jetson-centered ROS 2 architecture with GPS tracking,
-   LiDAR, Nav2, and expanded project documentation.
+   Moved to a Jetson running ROS 2, with GPS tracking, LiDAR, Nav2 and
+   expanded documentation.
 
-**RoboFleet - 2026-2027**
-   Continues the inherited platform with emphasis on RoboBeacon following,
-   absolute heading, obstacle-aware navigation, supervised weather protection,
-   safety verification, and reproducible handoff documentation.
+**RoboFleet (2026-2027)**
+   Our work. We are focused on RoboBeacon following, a magnetometer-based
+   heading, obstacle avoidance, weather protection, verifying the safety
+   systems, and documentation the next team can build on.
 
-System snapshot
----------------
+Where things stand
+------------------
 
-* **NVIDIA Jetson Orin Nano** :inherited:`Inherited` - retained as the ROS 2
-  compute platform; a compute upgrade is outside the current budget.
-* **GPS beacon following** :ready:`Software path present` - FleetBot and
-  RoboBeacon GNSS positions are converted into map-frame targets.
-* **BNO085 IMU** :planned:`Required upgrade` - the current branch includes
-  BNO085 support so fused magnetic heading can replace the inherited fixed-yaw behavior.
-* **RPLIDAR S2 30 m** :planned:`Planned upgrade` - IP65 replacement for the
-  inherited A1-class scanner.
-* **Weather protection** :planned:`Formal requirement` - supervised light rain,
-  incidental splashes, and wind-carried alkaline dust; no complete-robot IP claim.
+* **NVIDIA Jetson Orin Nano** :inherited:`Inherited`. We are keeping it as the
+  ROS 2 computer; a compute upgrade is outside our budget.
+* **GPS beacon following** :ready:`Software path present`. The FleetBot's and
+  the RoboBeacon's GPS positions are converted into targets in the map frame.
+* **BNO085 IMU** :planned:`Required upgrade`. The current code supports it, so
+  a magnetic heading can replace the fixed yaw the inherited MPU-6050 produces.
+* **RPLIDAR S2 30 m** :planned:`Planned upgrade`. An IP65 scanner to replace the
+  RPLIDAR A1 we have now.
+* **Weather protection** :planned:`Formal requirement`. Supervised light rain,
+  splashes and wind-blown alkaline dust. We are not claiming an IP rating for the
+  whole robot.
 
-Architecture at a glance
-------------------------
+How the pieces fit together
+---------------------------
 
 ::
 
@@ -50,11 +51,12 @@ Architecture at a glance
    BNO085 IMU --------+--> robot_localization --> Nav2 --> safety / command mux --> ODrive motors
    RPLIDAR / RF2O ----+
 
-.. important:: Documentation philosophy
+.. important:: How to read these pages
 
-   This site intentionally distinguishes **inherited**, **implemented/software
-   ready**, and **planned** work. A documented feature should not be interpreted
-   as fully commissioned on the physical robot unless its page explicitly says so.
+   We split things into **inherited** (came with the robot), **software ready**
+   (the code exists) and **planned** (not built or bought yet). Code that
+   exists is not the same as something that works on the real robot, so a page
+   only says a feature works if we tested it on the robot.
 
 .. toctree::
    :maxdepth: 2

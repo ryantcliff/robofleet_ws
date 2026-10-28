@@ -1,29 +1,31 @@
 Inherited Platform
 ==================
 
-RoboFleet inherits the mechanical rover from the previous RoboFlock team. The
-current team should preserve working mechanical subsystems unless a change is
-required for reliability, weatherproofing, serviceability, or sensor mounting.
+The mechanical rover comes from the previous RoboFlock team. We keep what
+works and only change something when it helps reliability, weatherproofing,
+serviceability or sensor mounting.
 
-Inherited assemblies
---------------------
+What we inherited
+-----------------
 
 **Chassis**
-   Main structural frame and extrusion rails.
+   Aluminum T-slot extrusion frame.
 
 **Drive system**
-   Four BLDC drive corners controlled as a differential/skid-steer platform.
+   Four BLDC motors, one per corner, driven as a skid-steer (differential)
+   platform.
 
-**Wheels & suspension**
-   Airless wheels with passive rocker-differential suspension.
+**Wheels**
+   Four pneumatic tires (4.10/3.50-4) on metal rims. An earlier note called
+   them nylon, but they are not.
 
-**Hull & electronics**
-   Protective body, compute, sensor mounts, power distribution, and wiring.
+**Body and electronics**
+   An open-topped electronics tray, compute, sensor mounts, power distribution
+   and wiring.
 
-Change-control rule
--------------------
+Before you change the geometry
+------------------------------
 
-Before modifying inherited geometry, record the original dimensions, mounting
-position, connector routing, and corresponding URDF transform. Mechanical
-changes that move GPS, IMU, or LiDAR sensors must be reflected in TF/URDF
-configuration.
+Write down the original dimensions, mounting position, connector routing and
+the matching URDF transform first. If a change moves the GPS, IMU or LiDAR, the
+TF/URDF config has to be updated to match.

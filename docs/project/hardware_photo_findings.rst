@@ -1,20 +1,20 @@
 Hardware photo findings — October 28, 2026
-===========================================
+==========================================
 
-These observations come from the photographs we took while inspecting the
-robot. We do not publish the raw photographs here.
+What we saw in the photos we took while inspecting the robot. We do not publish
+the raw photos here.
 
-Controller identification
+Which controller is which
 -------------------------
 
-We confirmed that four **distinct** ODESC V4.2 motor controllers are
-shown, in upload order:
+The photos show four separate ODESC V4.2 motor controllers. In the order we
+uploaded them:
 
 .. list-table::
    :header-rows: 1
 
    * - Location
-     - Photograph
+     - Photo
    * - Front-left (FL)
      - IMG_0785.jpeg
    * - Front-right (FR)
@@ -24,68 +24,59 @@ shown, in upload order:
    * - Rear-right (RR)
      - IMG_0788.jpeg
 
-Visible board markings include ODESC V4.2, 24 V QC stickers, 100 uF / 63 V
+We can read these markings: ODESC V4.2, 24 V QC stickers, 100 uF / 63 V
 capacitors, USB-C ports, terminals labeled motor A/C/B and DC +/-, and
-terminals labeled AUX +/- . Orange aluminum resistor housings are marked
-50W 2RJ, consistent with 2 ohms / nominal 50 W. These markings do not
-establish actual controller input voltage limits, correct resistor
-wiring, or adequate resistor heatsinking.
+terminals labeled AUX +/-. The orange aluminum resistor housings say 50W 2RJ,
+which fits a 2 ohm, 50 W part. None of these markings tell us the controller's
+real input voltage limit, whether the resistors are wired right, or whether
+they have enough heat sinking.
 
 .. warning::
 
-   The HOT PAXX seven-series battery can reach 29.4 V fully charged,
-   above the documented operating limit of some 24 V ODESC variants.
-   Keep motor power disconnected until each board's permitted input
-   voltage and power/braking installation have been verified.
+   The HOT PAXX 7S pack reaches 29.4 V fully charged, which is above the
+   documented limit of some 24 V ODESC variants. See :doc:`electrical_review`.
 
-Mechanical evidence
--------------------
+Mechanical
+----------
 
-* IMG_0789: Zeee 3S LiPo pack and balance connector.
-* IMG_0790: pneumatic tire marked 4.10/3.50-4, air valve, metal rim.
-  Replace the older unverified description of nylon tires.
-* IMG_0791: custom-looking wheel hub adapter, metal clamping collar and
-  printed-looking support bracket. Material, retention and whether the
-  gearbox shaft bears vehicle wheel loads remain unknown.
-* IMG_0792-IMG_0793: aluminum T-slot extrusion frame, 3D-printed-looking
-  brackets, open electronics tray and exposed cables.
-* IMG_0794: front sensor assembly with three blue circuit boards on a
-  custom-looking housing; exact electronics and pin assignments unverified.
-* IMG_0795-IMG_0798: further chassis/enclosure dimension views, top-mounted
-  LiDAR, and front/rear drive assembly views. Exact dimensions require
-  direct, consistent measurement.
+* IMG_0789: the Zeee 3S LiPo pack and its balance connector.
+* IMG_0790: a pneumatic tire marked 4.10/3.50-4, with the air valve and metal
+  rim. This replaces our older note that said nylon tires.
+* IMG_0791: a custom-looking wheel hub adapter, a metal clamping collar and a
+  printed-looking support bracket. We do not know the material or how the wheel
+  is retained, or whether the gearbox shaft carries the weight of the robot.
+* IMG_0792 and IMG_0793: aluminum T-slot frame, 3D-printed-looking brackets, an
+  open electronics tray and exposed cables.
+* IMG_0794: the front sensor assembly, three blue circuit boards on a custom
+  housing. We have not confirmed the exact electronics or pin assignments.
+* IMG_0795 to IMG_0798: more views of the chassis and enclosure, the top-mounted
+  LiDAR and the front and rear drive assemblies. We still need to measure real
+  dimensions.
 
-Prioritize controller electrical ratings, resistors, fuses and physical
-motor stop before drive tests. Verify wheel-to-shaft retention and support
-bearing arrangements before outdoor travel. Exposed boards/tray are
-not evidence of R-6 weather compliance.
+Before we drive: motor controller ratings, the resistors, the fuses and a
+physical motor stop. Before we go outside: how the wheels attach to the shafts
+and how they are supported. An open tray with exposed boards does not count as
+weather protection for R-6.
 
-See the companion hardware audit checklist for pending tests.
+The open checks are in the audit checklist.
 
+RL underside, October 28, 2026
+------------------------------
 
-RL underside identification - October 28, 2026
------------------------------------------------
+A close-up of the rear-left (RL) controller shows the marking JMT G3002B on
+several power-stage parts. That is the JieJie Microelectronics JMTG3002B N-channel
+MOSFET, and its datasheet gives a **30 V absolute-maximum drain-source voltage**.
+We confirmed that **all four controllers are identical hardware**, so we are
+using the RL identification for FL, FR, RL and RR. We only photographed the RL
+MOSFETs up close and have not read the markings on the other three.
 
-A close-up of the rear-left (RL) controller shows the marking JMT G3002B
-on multiple power-stage components. This corresponds to the JieJie
-Microelectronics JMTG3002B N-channel power MOSFET. Manufacturer
-documentation specifies a **30 V absolute-maximum drain-source voltage**.
-We subsequently confirmed that **all four controllers are identical
-hardware**. Thus the RL MOSFET identification is the working power-stage
-identification for FL, FR, RL and RR as well. Only the RL MOSFET
-markings were directly photographed in close-up; the other three have
-not been individually inspected at the component-marking level.
+The HOT PAXX pack is 29.4 V fully charged, which is only 0.6 V under the
+transistor's absolute maximum, before any switching or braking spikes. That is
+too little margin for running these four controllers directly off this pack.
+The 24 V QC marking fits a low-voltage ODESC variant.
 
-The present HOT PAXX 7S motor pack is specified as 29.4 V fully
-charged. That provides only 0.6 V below the transistor's absolute
-maximum, even before switching and regenerative-braking transients.
-There is no acceptable engineering voltage margin for directly
-powering these four identical controllers from the current pack. The
-24V QC marking is consistent with a low-voltage ODESC variant.
-
-Keep the motor battery disconnected pending a reviewed compatible
-power architecture. The RL heat sink was removed for inspection;
-restore and verify its thermal interface before future operation.
+The RL heat sink was taken off for the inspection and has since been put back
+on. We have not checked the thermal paste or how tight it is.
 
 Reference: JieJie Microelectronics JMTG3002B datasheet, version 1.4.
 https://e-nexty.dxp.nexty-ele.com/product_files/download?maker_code=JJM&product_part_number=JMTG3002B&product_file_id=5467845&product_id=6198730&lc_code=ja&search_log_id=4389931

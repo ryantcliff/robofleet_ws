@@ -1,195 +1,190 @@
 FleetBot hardware inventory — physical audit (2026-10-28)
 =========================================================
 
-This is an inventory of physically identified hardware, not a validated
-electrical schematic or proof of operation. RoboFleet continues inherited
-RoboFlock equipment. The required 2026–2027 delivery is one FleetBot.
+This is a list of the hardware we have physically found and looked at. It is not a
+wiring diagram, and being on this list does not mean a part works. RoboFleet
+reuses RoboFlock's equipment, and what we owe this year is one FleetBot.
 
 .. warning::
 
-   Keep motor power disconnected. We have confirmed all four
-   ODESC V4.2 controllers are identical. An RL board inspection identified
-   30 V maximum-rated JMTG3002B power MOSFETs, while the installed 7S4P
-   battery can reach 29.4 V fully charged. This leaves inadequate voltage
-   margin for switching and regenerative transients; the existing
-   battery-controller pairing should not be used. Select and review a
-   compatible motor-power architecture before further drive testing.
+   The motor power is the biggest risk we know about. All four ODESC
+   controllers are the same, and the one we opened (RL) has JMTG3002B power
+   MOSFETs rated 30 V absolute maximum. Our 7S pack charges to 29.4 V, which
+   leaves 0.6 V before switching and braking spikes. We are still using the
+   pack and controllers. Read :doc:`electrical_review` for what we measured and
+   what we have done about it.
 
-Hardware we have identified
----------------------------
+What we have identified
+-----------------------
 
 .. list-table::
    :header-rows: 1
-   :widths: 10 8 58 24
+   :widths: 10 8 56 26
 
    * - ID
      - Qty
-     - Identified hardware
-     - Verification status
+     - What it is
+     - Where we stand
    * - RF-001
      - 3
-     - LILYGO T-Beam AXP2101 V1.2, 868/915 MHz LoRa marking,
-       u-blox NEO-6M (HOME / TOM / ROBOT)
-     - Observed; radio chip/config unverified
+     - LILYGO T-Beam AXP2101 V1.2 (868/915 MHz LoRa marking, u-blox
+       NEO-6M). Named HOME, TOM and ROBOT.
+     - Inspected. Radio chip and config not checked.
    * - RF-002
      - 4
-     - Four identical ODESC V4.2 motor controllers; FL, FR, RL, RR
-     - Identical hardware confirmed by team; unsafe 7S voltage margin
+     - ODESC V4.2 motor controllers at FL, FR, RL and RR. All four are
+       identical. Firmware 0.5.6 on hardware 3.6.24.
+     - Seen and read over USB. The voltage margin is a problem; see the
+       electrical review.
    * - RF-003
      - 1
-     - Zeee 6000 mAh 3S 11.1 V 66.6 Wh LiPo (Jetson battery)
-     - Observed; output/load untested
+     - Zeee 6000 mAh 3S 11.1 V 66.6 Wh LiPo (Jetson battery).
+     - Inspected. Not tested under load.
    * - RF-004
      - 1
-     - HOT PAXX 7S4P 25.2 V 20 Ah 504 Wh lithium-ion motor pack;
-       29.4 V charging, 40 A continuous and 60 A peak BMS labels
-     - Observed; controller compatibility unresolved
+     - HOT PAXX 7S4P lithium-ion motor pack, 25.2 V nominal, 20 Ah, 504
+       Wh, EVE 21700 50E cells. BMS: ChangFa 40 A continuous, 60 A peak,
+       19 V minimum. XT90 discharge port, XT60 charge port (29.4 V, up to
+       5 A).
+     - Label read. Whether it suits the controllers is the open problem.
    * - RF-005
      - 1
-     - Sabrent HB-UMLS USB 2.0 four-port hub
-     - Observed; Arduino and dev peripherals
+     - Sabrent HB-UMLS USB 2.0 four-port hub.
+     - Inspected. Arduino and dev peripherals.
    * - RF-006
      - 1
-     - Unmarked USB-C upstream / four USB-A downstream hub
-     - Observed; four motor-controller USB links
+     - Unmarked hub, USB-C upstream and four USB-A downstream.
+     - Inspected. The four motor-controller USB links.
    * - RF-007
      - 1
-     - SparkFun GPS-RTK2 with u-blox ZED-F9P-02B-00
-     - Observed; RTK status untested
+     - SparkFun GPS-RTK2 with u-blox ZED-F9P-02B-00.
+     - Inspected. RTK not tested. No fix when we listened (quality 0, no satellites).
    * - RF-008
      - 1
-     - LM2596 adjustable DC-DC buck board
-     - Observed; voltage and load capacity untested
+     - LM2596 adjustable DC-DC buck board.
+     - Inspected. Output voltage and load not tested.
    * - RF-009
      - 2
-     - Unmarked fuse/distribution blocks (one Jetson, four ODESC branches)
-     - Observed; fuse values unknown
+     - Two fuse blocks. Motor block: four yellow 20 A fuses, one per
+       controller. Jetson block: one 5 A fuse.
+     - Seen, values read. There is no main fuse.
    * - RF-010
      - 4
-     - STEPPERONLINE M82B200-24P-30S/G82-30S1,
-       24 V 200 W geared BLDC motors
-     - Observed
+     - STEPPERONLINE M82B200-24P-30S/G82-30S1, 24 V 200 W geared BLDC
+       motors.
+     - Inspected.
    * - RF-011
      - 4
-     - Pneumatic tires marked 4.10/3.50-4 on metal rims,
-       roughly 10-inch outside diameter
-     - Photo-confirmed; tire pressure/hub unknown
+     - Pneumatic tires marked 4.10/3.50-4 on metal rims, about 10 in
+       outside diameter.
+     - Photo-confirmed. Tire pressure and hub details unknown.
    * - RF-012
      - 1
-     - Arduino Nano, ATmega328P-marked
-     - Observed; pin assignments unverified
+     - Arduino Nano (ATmega328P).
+     - Inspected. Pin assignments not checked.
    * - RF-013
      - 3
-     - HC-SR04 ultrasonic sensors per team inventory
-     - Observed; exposed sensor-board model confirmation pending
+     - HC-SR04 ultrasonic sensors, per our inventory.
+     - Inspected. Sensor-board model not confirmed.
    * - RF-014
      - 1
-     - RPLIDAR A1M8 (STC-A0317-R03 marking)
-     - Observed; existing LiDAR, not S2
+     - RPLIDAR A1M8 (marked STC-A0317-R03).
+     - Inspected. This is the LiDAR we have, not the S2.
    * - RF-015
      - 1
-     - u-blox ANN-MB2-00-00 active multiband GNSS antenna
-     - Observed; actual cable pairing unknown
+     - u-blox ANN-MB2-00-00 active multiband GNSS antenna.
+     - Inspected. Which receiver it is cabled to is not confirmed.
    * - RF-016
      - 1
-     - SparkFun u-blox NEO-M8P-2-12 receiver (RoboBeacon)
-     - Observed; breakout revision unknown
+     - SparkFun u-blox NEO-M8P-2-12 receiver (the RoboBeacon).
+     - Inspected. Breakout revision unknown.
    * - RF-017
      - 1
-     - u-blox ANN-MB-00-00 L1/L2 active GNSS antenna
-     - Observed; actual cable pairing unknown
+     - u-blox ANN-MB-00-00 L1/L2 active GNSS antenna.
+     - Inspected. Which receiver it is cabled to is not confirmed.
    * - RF-018
      - 2
-     - HC-12 433 MHz serial radio modules
-     - Observed; RoboBeacon TX / FleetBot RX
+     - HC-12 433 MHz serial radios.
+     - Inspected. One transmits for the RoboBeacon, one receives on the
+       FleetBot.
    * - RF-019
      - 1
-     - Surface Go 2 tablet, Pentium 4425Y, 4 GB RAM,
-       Windows 10 Pro 22H2
-     - Available; future home-base role unconfirmed
+     - Surface Go 2, Pentium 4425Y, 4 GB RAM, Windows 10 Pro 22H2.
+     - In our possession. We have not decided if it is the home base.
    * - RF-020
      - 1
-     - NVIDIA Jetson Orin Nano Developer Kit
-     - Observed; inherited onboard compute
+     - NVIDIA Jetson Orin Nano Developer Kit. Runs Ubuntu 22.04.5 (L4T
+       R36.4.7) and reports itself as the "Super" dev kit.
+     - Inspected. Inherited.
 
-Reported driving demonstration
-------------------------------
+A driving demonstration we were told about
+------------------------------------------
 
-We understand that the inherited FleetBot was driven around
-for **more than 30 minutes** with the complete onboard electrical
-system connected, including the motor battery and four ODESC motor
-controllers. This is useful evidence of sustained drivetrain operation
-under the conditions of that demonstration, not just a bench motor-spin
-test. The demonstration predates this inspection, and the following
-were not independently recorded in this audit: battery state of charge,
-actual DC-bus voltage or transients, peak load, braking events, test
-terrain, ambient/controller temperature, and detailed log data.
+We were told that the inherited FleetBot was driven around for **more than 30
+minutes** with everything connected, including the motor battery and all four
+controllers. That is good evidence the drivetrain works for a sustained run, and
+it was more than a bench spin test. It happened before our inspection, and
+nobody recorded the battery charge, the bus voltage or spikes, the peak load,
+braking, the terrain, the temperatures, or any logs.
 
-This demonstration is a reason to **preserve the inherited working
-architecture during investigation**, not to assume the controller
-rating discrepancy is harmless. No replacement motor battery,
-controller, or converter has been selected. Any further powered tests
-should follow a documented electrical-risk review.
+We take that as a reason to keep the working design while we investigate. It
+does not tell us the voltage margin is fine. We have not chosen a replacement
+battery, controller or converter.
 
-Electrical architecture: observed versus unverified
----------------------------------------------------
+Electrical setup: what we know and what we do not
+-------------------------------------------------
 
-* Zeee 3S battery -> fused LM2596 buck board -> Jetson DC input is
-  described by team inspection. An LM2596 is a step-down converter, not a
-  boost converter. Measure actual output voltage and regulation under load.
-* HOT PAXX 7S motor battery -> four fused ODESC supplies is described
-  by team inspection. Record exact fuse values, wire gauge, disconnects,
-  controller bus ratings and transient/regen protection before energizing.
-* Team confirms all four ODESC boards are identical. A close-up of RL identifies
-  JMTG3002B MOSFETs with 30 V absolute-maximum drain-source rating, only 0.6 V
-  above the 7S battery full-charge voltage. Avoid direct 7S operation;
-  investigate a compatible motor power architecture.
-* Four orange aluminum-cased resistors are marked 50W 2RJ, consistent
-  with 2 ohm / 50 W braking resistors. Their wiring, firmware configuration,
-  electrical pulse rating and heat sinking remain to be checked.
-* Four USB-connected ODESC devices share one unidentified hub. Verify
-  the hub power arrangement, enumeration and disconnect behavior.
-* ZED-F9P offers RTK capability but actual fix/correction quality is
-  unmeasured; do not assume centimeter-grade tracking.
-* HOME/TOM/ROBOT T-Beams are optional communications equipment under
-  the present contractual scope, not a finished home-base assembly.
+* **Jetson power.** The Zeee 3S battery feeds a fuse, then the LM2596 buck board,
+  then the Jetson's DC input. The LM2596 only steps voltage down. We have not
+  measured its output under load.
+* **Motor power.** The HOT PAXX 7S pack feeds the motor fuse block, with one
+  20 A fuse for each controller. The motor cable is 10 AWG, 200 C rated, red on
+  positive and black on negative. There is no main fuse and no disconnect; the
+  only way to cut motor power is to unplug the XT90.
+* **Controllers.** All four are the same. Read over USB they report hardware
+  3.6.24 and firmware 0.5.6. The firmware's overvoltage trip is set to 32 V,
+  above the transistors' 30 V rating. The ODrive documentation says the default
+  for this board is 26 V.
+* **Braking resistors.** Four orange aluminum 50W 2RJ resistors, 2 ohm, connected
+  and measured. The controllers are set to use them (2.0 ohm, enabled). We
+  have not checked the resistors' pulse rating or heat sinking.
+* **USB.** All four controllers share one unmarked hub. We have not checked how
+  it is powered or how it behaves when something is unplugged.
+* **GPS.** The ZED-F9P can do RTK, but we have not measured the real fix or
+  correction quality, so we are not assuming centimeter-level tracking.
+* **T-Beams.** HOME, TOM and ROBOT are optional radios this year. They are not a
+  finished home base.
 
-Mechanical and weather observations
------------------------------------
+Mechanical and weather
+----------------------
 
-Photos show aluminum T-slot extrusions, custom-looking printed motor supports,
-custom wheel/shaft couplings, a partly exposed sensor bar, and an open-topped
-electronics container. Four pneumatic wheels have metal rims and valve stems.
-The shaft retention, hub material, independent wheel bearings, wheelbase,
-track, loaded radius, and mounting hardware remain to be measured.
+The photos show aluminum T-slot extrusions, custom printed motor mounts, custom
+wheel and shaft couplings, a partly exposed sensor bar and an open-topped
+electronics tray. The tires are pneumatic with metal rims and valve stems. We
+still need to measure the shaft retention, hub material, wheel bearings,
+wheelbase, track width, loaded radius and mounting hardware.
 
-Visible exposed electronics and connections do not establish weather
-protection under requirement R-6. No whole-FleetBot IP rating is claimed.
+Exposed electronics do not count as weather protection under requirement R-6.
+We are not claiming an IP rating for the whole FleetBot.
 
-Required/planned parts not confirmed installed
+Required or planned parts we have not installed
 -----------------------------------------------
 
-* BNO085-class absolute-heading IMU — required upgrade.
-* RPLIDAR S2 30 m weather-resistant scanner — planned upgrade.
-* Verified physical e-stop, disconnect, fused/appropriate motor harness,
-  weather-protected connectors and sealed electronics enclosure —
-  installation/ratings unverified.
+* BNO085-class absolute-heading IMU (required upgrade).
+* RPLIDAR S2 30 m weatherproof scanner (planned upgrade).
+* A physical e-stop or disconnect, a fused motor harness that is rated for the
+  pack, weatherproof connectors and a sealed electronics enclosure.
 
-Cross-references
-----------------
+Where to look next
+------------------
 
-See the hardware photo findings and audit checklist in this section for the
-photo-to-controller mapping and the open verification tasks. Formal work
-scope is in the requirements page.
+The photo-to-controller mapping is in the hardware photo findings, and the open
+checks are in the audit checklist. The formal scope is on the requirements page.
 
-External references (not proof of the particular installed variant):
+References (these describe the parts in general, not our exact units):
 
 * NVIDIA: https://docs.nvidia.com/jetson/orin-nano-devkit/user-guide/latest/hardware_layout.html
 * LM2596: https://www.ti.com/product/LM2596
 * Sabrent HB-UMLS: https://sabrent.com/products/hb-umls
 * STEPPERONLINE motor: https://www.stepperonline.co.uk/24v-200w-100rpm-geared-brushless-dc-motor-15-00nm-2124-17oz-in-30-1-planetary-gearbox-m82b200-24p-30s-g82-30s1.html
 * u-blox ZED-F9P: https://content.u-blox.com/sites/default/files/documents/ZED-F9P-02B_DataSheet_UBX-21023276.pdf
-
-For privacy, this public page excludes individual serial numbers, Windows
-device identifiers, private radio identifiers, encryption keys and raw
-inspection photographs.

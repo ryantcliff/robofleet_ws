@@ -1,10 +1,9 @@
 Beacon Following
 ================
 
-Beacon following is a primary 2026-2027 requirement. The person carries the
-**RoboBeacon**; the robot being delivered this year is a **FleetBot**. RoboFleet
-converts the received RoboBeacon latitude/longitude into a Nav2 target and
-follows while maintaining a safe stand-off distance.
+Following the beacon is the main thing we have to deliver. A person carries the
+**RoboBeacon**, and the **FleetBot** takes its latitude and longitude, turns it
+into a Nav2 target, and follows while keeping a safe distance.
 
 Data flow
 ---------
@@ -22,32 +21,31 @@ Data flow
                                              v
                                            Nav2
 
-Required behavior
+What it has to do
 -----------------
 
 **Follow**
-   The formal acceptance range is approximately **1.5-3.0 m short of the
-   RoboBeacon**. The current mission configuration targets 3 m, which is within
-   that required range.
+   Stop about **1.5 to 3.0 m short of the RoboBeacon**. Our mission config aims
+   for 3 m, which is inside that range.
 
 **Stale target**
-   Cancel the Nav2 goal and stop pursuit when RoboBeacon position data becomes
-   stale or unavailable.
+   If the RoboBeacon position goes stale or disappears, cancel the Nav2 goal
+   and stop chasing it.
 
-**Obstacle-aware motion**
-   Continue to use the LiDAR/Nav2 stack so a known obstacle in the planned path
-   is represented and the FleetBot does not intentionally drive through it.
+**Obstacles**
+   Keep using the LiDAR and Nav2 so an obstacle in the planned path shows up
+   and the FleetBot does not drive into it on purpose.
 
 **Safety**
-   Final velocity still passes through operator e-stop/arming and command
-   arbitration before motor control.
+   The final velocity still goes through the operator e-stop and the command
+   mux before it reaches the motors.
 
-Return-home status
-------------------
+Return home
+-----------
 
-Return-home and Meshtastic features may be preserved or improved, but they are
-not required for this year's final acceptance unless the requirements document
-is formally revised.
+The return-home and Meshtastic features are still in the code and we may keep
+improving it, but it is not required this year unless the requirements get
+formally changed.
 
 Simulation
 ----------

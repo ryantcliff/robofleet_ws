@@ -1,8 +1,8 @@
 Concepts
 ========
 
-These pages describe the current ROS 2 architecture and how the main autonomy
-subsystems interact.
+How the ROS 2 side of the robot is put together, and how the main pieces
+(localization, beacon following, obstacle detection) talk to each other.
 
 .. toctree::
    :maxdepth: 1

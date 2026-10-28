@@ -1,43 +1,48 @@
 ROS Topics & Interfaces
 =======================
 
-Key ROS interfaces used by the current integration are summarized below.
+The main topics we use:
 
 .. list-table::
    :header-rows: 1
    :widths: 32 68
 
    * - Topic
-     - Type / role
+     - What it is
    * - ``/scan``
-     - LiDAR ``sensor_msgs/LaserScan``
+     - LiDAR scan (``sensor_msgs/LaserScan``)
    * - ``/imu/data``
-     - IMU orientation, angular velocity, and acceleration
+     - IMU orientation, angular velocity and acceleration
    * - ``/gps/robot/fix``
-     - Robot GNSS fix
+     - The robot's GPS fix
    * - ``/gps/beacon/fix``
-     - Beacon GNSS fix received by the robot
+     - The RoboBeacon's GPS fix, as received by the robot
    * - ``/odom_rf2o``
-     - Laser odometry input
+     - Laser odometry
    * - ``/odometry/local``
-     - Local EKF result used by Nav2
+     - Local EKF output, used by Nav2
    * - ``/odometry/global``
-     - GPS-aligned global EKF result
+     - GPS-aligned global EKF output
    * - ``/cmd_vel``
-     - Nav2 velocity output
+     - Nav2's velocity command
    * - ``/cmd_vel_joy``
-     - Joystick command path
-   * - ``/cmd_vel_estop``
-     - Ultrasonic emergency-stop command path
+     - Joystick velocity command
    * - ``/cmd_vel_mux``
-     - Arbitrated velocity command to motor controller
+     - What ``twist_mux`` picked (joystick wins over Nav2)
+   * - ``/cmd_vel_safe``
+     - ``/cmd_vel_mux`` after ``ultrasonic_estop`` has blocked forward motion if
+       needed. This is what the motor controller listens to.
+   * - ``/e_stop``
+     - Armed / stopped flag from ``e_stop``
+   * - ``/range/left_ultrasonic``, ``center``, ``right``
+     - Ultrasonic distances
    * - ``/station/command``
-     - Follow/home/stop/status mode command
+     - Mode command: follow, home, stop or status
    * - ``/robot/status``
      - Robot status for telemetry
 
-Useful inspection commands
---------------------------
+Useful commands
+---------------
 
 .. code-block:: bash
 

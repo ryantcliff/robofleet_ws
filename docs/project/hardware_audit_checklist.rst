@@ -1,72 +1,73 @@
 Hardware verification checklist
 ===============================
 
-This is an inspection plan, **not** permission to energize an unverified
-motor controller or open lithium battery packs. Start de-energized, and
-have a qualified supervisor review battery and power-stage tests.
+Our to-do list for checking the hardware. Start with everything powered off.
+Do not open the lithium packs. The motor power items below are worked out in
+detail on :doc:`electrical_review`, which has what we measured and what we
+found.
 
-Priority 0 — before reconnecting motor power
---------------------------------------------
+Priority 0: motor power
+-----------------------
 
 .. list-table::
    :header-rows: 1
+   :widths: 24 76
 
    * - Item
-     - Evidence needed
-   * - Motor-controller and battery incompatibility
-     - All four ODESC V4.2 controllers are confirmed to be
-       identical hardware. The inspected RL board has JMTG3002B 30 V
-       power MOSFETs and a 24V QC marking. The existing 7S pack reaches
-       29.4 V when fully charged, leaving inadequate margin for switching
-       and regeneration. **Do not reconnect the current 7S pack.**
-       Select a compatible controller/power architecture, then have its
-       full voltage, braking and current ratings independently reviewed
+     - Where it stands
+   * - Controllers vs. battery
+     - All four ODESC V4.2 controllers are identical. The one we looked at (RL)
+       has JMTG3002B power MOSFETs rated 30 V absolute maximum and a 24 V QC
+       marking, and our 7S pack charges to 29.4 V. That is too close, because
+       switching spikes and braking push the bus voltage up. We have not fixed
+       this. Details and what we have tried are on :doc:`electrical_review`.
    * - Braking resistors
-     - Check each labeled 50W 2RJ component's continuity, terminal
-       assignment, firmware resistance setting, and metal heatsinking
+     - Done. All four are connected and read 2 ohm. The controllers are now set
+       to use them (2.0 ohm, enabled).
    * - Battery power path
-     - Label each fuse rating, wire size and polarity; verify safe
-       master disconnect, strain relief, connectors and insulation
+     - Visual inspection complete. Four 20 A fuses on the motor controllers, one 5 A fuse on
+       the Jetson, no main fuse, 10 AWG wire with correct polarity and no
+       damage. There is no master disconnect.
    * - Motor safety stop
-     - Identify physical stopping hardware and separately validate
-       the existing software e-stop/watchdog with wheels safely raised
-   * - Mechanical wheel retention
-     - Identify wheel hub, clamp, shaft key/set screws, independent
-       bearings and gearbox shaft radial/bending load
+     - We do not have a physical one. Unplugging the battery is the only way to
+       cut motor power. The software e-stop (PS4 Cross) idles the motors and
+       they coast. Test it with the wheels off the ground.
+   * - Wheel retention
+     - Not done. Check the hub, clamp, shaft key and set screws, the bearings,
+       and how much of the load the gearbox shaft carries.
 
-Priority 1 — electronics bring-up
----------------------------------
+Priority 1: electronics
+-----------------------
 
-* Measure Jetson power supply setting and battery voltage ranges under
-  controlled, supervised loading; LM2596 is a buck-only converter.
-* Identify the exact USB hub model and upstream ports. Inspect
-  disconnected/reconnected device enumeration and serial identity.
-* Confirm Arduino Nano firmware, three ultrasonic board identities,
-  connector pinout, obstacle/timeout failsafe and sensor orientations.
-* Verify ZED-F9P antenna path, correction source, fix type, GNSS covariance
-  and stationary-position variation before GPS following.
-* Verify the RoboBeacon NEO-M8P-2/HC-12 telemetry channel and stale-data
-  stop behavior. HC-12 physical pinout is conventionally VCC, GND, RXD,
-  TXD, SET; check silkscreen before wiring.
-* Install and validate the required BNO085-class IMU for true absolute
-  heading before enabling GPS-based navigation.
-* Test the existing RPLIDAR A1M8; only describe S2 as installed after
-  hardware has been purchased and commissioned.
+* Measure the Jetson's power supply setting and the 3S battery's voltage range
+  under load. The LM2596 only steps voltage down.
+* Find out exactly which USB hub model is which, and which port goes where.
+  Unplug and replug things and check they come back with the same serial.
+* Check the Arduino Nano firmware, which ultrasonic board is which, the
+  connector pinout and the sensor directions.
+* Check the ZED-F9P antenna path, correction source, fix type and GPS
+  covariance. Log the position while it sits still before we trust GPS
+  following.
+* Check the RoboBeacon NEO-M8P-2 / HC-12 link and what happens when its data
+  stops. The HC-12 pinout is normally VCC, GND, RXD, TXD, SET; check the
+  silkscreen before wiring.
+* Install and test the BNO085 for a real absolute heading before using
+  GPS-based navigation.
+* Test the RPLIDAR A1M8 we have. We only call the S2 installed once it is bought
+  and working.
 
-Priority 2 — geometry, environment, reproducibility
-----------------------------------------------------
+Priority 2: geometry, weather, repeatability
+--------------------------------------------
 
-* Measure wheelbase, wheel-center track, loaded rolling radius, tire
-  pressure, ground clearance, frame dimensions, total mass and center
-  of mass.
-* Record aluminum extrusion profiles, corner brackets, motor mounting
-  dimensions, printed part materials, fasteners and drivetrain couplers.
-* Create an enclosure/cable-gland layout protecting electronics from
-  supervised light rain, splash and alkaline dust. Do not assign a
-  whole-robot IP rating without testing.
-* Determine whether the Surface Go 2 and HOME T-Beam are part of a
-  future home-base prototype; optional under the current requirements.
+* Measure the wheelbase, track width, loaded wheel radius, tire pressure,
+  ground clearance, frame size, total mass and center of mass.
+* Write down the extrusion profiles, brackets, motor mounts, 3D-printed part
+  materials, fasteners and drivetrain couplers.
+* Plan the enclosure and cable glands for light rain, splashes and alkaline
+  dust. We do not give the whole robot an IP rating without testing it.
+* Decide whether the Surface Go 2 and HOME T-Beam are part of a home-base
+  prototype. They are optional right now.
 
-Document each verified item with date, tester, instrument or photograph,
-measurement and pass/fail outcome. Do not change a status from
-'unverified' to 'commissioned' based on appearance alone.
+For each item we finish, write down the date, who did it, the instrument or
+photo, the measurement, and whether it passed. We do not mark something
+"commissioned" just because it looks fine.
