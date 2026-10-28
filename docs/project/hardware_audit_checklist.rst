@@ -13,10 +13,14 @@ Priority 0 — before reconnecting motor power
 
    * - Item
      - Evidence needed
-   * - ODESC FL, FR, RL and RR rated input voltage
-     - Part/purchase documentation and board component identification;
-       compare maximum rated bus voltage with fully charged 7S = 29.4 V
-       and expected regeneration/transients
+   * - Motor-controller and battery incompatibility
+     - All four ODESC V4.2 controllers are confirmed by the team to be
+       identical hardware. The inspected RL board has JMTG3002B 30 V
+       power MOSFETs and a 24V QC marking. The existing 7S pack reaches
+       29.4 V when fully charged, leaving inadequate margin for switching
+       and regeneration. **Do not reconnect the current 7S pack.**
+       Select a compatible controller/power architecture, then have its
+       full voltage, braking and current ratings independently reviewed
    * - Braking resistors
      - Check each labeled 50W 2RJ component's continuity, terminal
        assignment, firmware resistance setting, and metal heatsinking
