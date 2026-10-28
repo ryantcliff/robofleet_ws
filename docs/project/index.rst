@@ -13,4 +13,5 @@ status for the 2026–2027 continuation project.
    hardware_inventory
    hardware_photo_findings
    hardware_audit_checklist
+   electrical_review
    jetson_diagnostics
