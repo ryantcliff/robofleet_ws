@@ -258,9 +258,17 @@ Where each Stage A item stands as of 2026-10-28.
        "ODESC V4.2 24V" describe an 8 to 24 V working range (the 56 V variant is
        listed at 8 to 56 V), and some listings conflict. Our pack rests at about
        28 V and charges to 29.4 V, above that listed range.
-   * - A3, A4
+   * - A3
+     - Not performed, by decision
+     - We decided not to photograph the power MOSFETs on FL, FR and RR. We
+       confirmed the four controllers are identical hardware, and all four
+       report the same hardware version (3.6.24) and firmware (0.5.6) over USB.
+       The 30 V rating in A1 therefore applies to all four boards only on the
+       assumption that they are identical; we have not read a marking from the
+       other three.
+   * - A4
      - Not performed
-     - MOSFET photographs for FL, FR and RR, and the bus capacitor ratings.
+     - The bus capacitor ratings.
    * - A5
      - Checked
      - Four yellow blade fuses marked 20 (20 A) feed the four motor
