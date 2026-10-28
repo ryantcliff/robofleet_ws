@@ -10,7 +10,6 @@ Who we are, what we have to deliver, and where the robot stands.
    requirements
    roadmap
    hardware_inventory
-   hardware_photo_findings
    hardware_audit_checklist
    electrical_review
    jetson_diagnostics

@@ -69,5 +69,5 @@ Priority 2: geometry, weather, repeatability
   prototype. They are optional right now.
 
 For each item we finish, write down the date, who did it, the instrument or
-photo, the measurement, and whether it passed. We do not mark something
+reference, the measurement, and whether it passed. We do not mark something
 "commissioned" just because it looks fine.

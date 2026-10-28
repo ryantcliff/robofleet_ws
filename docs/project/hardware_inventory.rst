@@ -77,7 +77,7 @@ What we have identified
      - 4
      - Pneumatic tires marked 4.10/3.50-4 on metal rims, about 10 in
        outside diameter.
-     - Photo-confirmed. Tire pressure and hub details unknown.
+     - Confirmed by inspection. Tire pressure and hub details unknown.
    * - RF-012
      - 1
      - Arduino Nano (ATmega328P).
@@ -158,7 +158,7 @@ Electrical setup: what we know and what we do not
 Mechanical and weather
 ----------------------
 
-The photos show aluminum T-slot extrusions, custom printed motor mounts, custom
+Our inspection showed aluminum T-slot extrusions, custom printed motor mounts, custom
 wheel and shaft couplings, a partly exposed sensor bar and an open-topped
 electronics tray. The tires are pneumatic with metal rims and valve stems. We
 still need to measure the shaft retention, hub material, wheel bearings,
@@ -175,14 +175,31 @@ Required or planned parts we have not installed
 * A physical e-stop or disconnect, a fused motor harness that is rated for the
   pack, weatherproof connectors and a sealed electronics enclosure.
 
+Markings we can read
+--------------------
+
+On the controllers we can read: ODESC V4.2, 24 V QC stickers, 100 uF / 63 V
+capacitors, USB-C ports, terminals labeled motor A/C/B and DC +/-, and
+terminals labeled AUX +/-. The orange aluminum resistor housings say 50W 2RJ,
+which fits a 2 ohm, 50 W part. None of these markings tell us the controller's
+real input voltage limit, whether the resistors are wired correctly, or whether
+they have enough heat sinking.
+
+On the underside of the rear-left (RL) controller we read the marking
+JMT G3002B on several power-stage parts. That is the JieJie Microelectronics
+JMTG3002B N-channel MOSFET, with a 30 V absolute-maximum drain-source voltage.
+We have only read the MOSFET markings on RL. The other three controllers are
+identical to it, which we know from their matching hardware and firmware versions.
+
 Where to look next
 ------------------
 
-The photo-to-controller mapping is in the hardware photo findings, and the open
-checks are in the audit checklist. The formal scope is on the requirements page.
+The open checks are in the audit checklist, the motor power details are in the
+electrical review, and the formal scope is on the requirements page.
 
 References (these describe the parts in general, not our exact units):
 
+* JieJie JMTG3002B datasheet, version 1.4: https://e-nexty.dxp.nexty-ele.com/product_files/download?maker_code=JJM&product_part_number=JMTG3002B&product_file_id=5467845&product_id=6198730&lc_code=ja&search_log_id=4389931
 * NVIDIA: https://docs.nvidia.com/jetson/orin-nano-devkit/user-guide/latest/hardware_layout.html
 * LM2596: https://www.ti.com/product/LM2596
 * Sabrent HB-UMLS: https://sabrent.com/products/hb-umls

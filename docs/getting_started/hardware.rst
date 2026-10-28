@@ -7,10 +7,9 @@ autonomous follow mode.
 Inventory and the voltage problem
 ---------------------------------
 
-Our parts list is in :doc:`../project/hardware_inventory`. What we saw when we
-inspected the robot is in :doc:`../project/hardware_photo_findings`, the checks
-we still want to do are in :doc:`../project/hardware_audit_checklist`, and the
-motor power details are in :doc:`../project/electrical_review`.
+Our parts list is in :doc:`../project/hardware_inventory`, the checks we still
+want to do are in :doc:`../project/hardware_audit_checklist`, and the motor
+power details are in :doc:`../project/electrical_review`.
 
 .. warning::
 

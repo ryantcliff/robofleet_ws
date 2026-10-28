@@ -11,7 +11,7 @@ The problem
 
 * The pack is a HOT PAXX 7S4P: 25.2 V nominal, **29.4 V full**, with a BMS rated
   40 A continuous and 60 A peak (from the label).
-* The power MOSFET we photographed on the RL controller is a JMTG3002B. Its
+* The power MOSFET we inspected on the RL controller is a JMTG3002B. Its
   datasheet says **30 V absolute maximum** drain-source. The other three
   controllers are identical to it, but we have not looked at their markings.
 * At full charge that is 0.6 V of room before any switching spike or braking
@@ -92,7 +92,7 @@ What we checked
        and we have not found a BMS datasheet. It also does not say whether the
        discharge port will take charge current from motor braking.
 
-We are not doing the rest of Stage A. That was photographing the other three
+We are not doing the rest of Stage A. That was reading the MOSFET markings on the other three
 MOSFETs and recording the bus capacitor ratings. The item numbers still skip
 those, so the references in the other pages stay correct.
 
