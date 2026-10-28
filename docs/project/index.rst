@@ -10,3 +10,6 @@ status for the 2026–2027 continuation project.
    team
    requirements
    roadmap
+   hardware_inventory
+   hardware_photo_findings
+   hardware_audit_checklist
