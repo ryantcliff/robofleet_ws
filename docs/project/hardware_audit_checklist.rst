@@ -14,7 +14,7 @@ Priority 0 — before reconnecting motor power
    * - Item
      - Evidence needed
    * - Motor-controller and battery incompatibility
-     - All four ODESC V4.2 controllers are confirmed by the team to be
+     - All four ODESC V4.2 controllers are confirmed to be
        identical hardware. The inspected RL board has JMTG3002B 30 V
        power MOSFETs and a 24V QC marking. The existing 7S pack reaches
        29.4 V when fully charged, leaving inadequate margin for switching
@@ -66,8 +66,6 @@ Priority 2 — geometry, environment, reproducibility
   whole-robot IP rating without testing.
 * Determine whether the Surface Go 2 and HOME T-Beam are part of a
   future home-base prototype; optional under the current requirements.
-* Keep raw photo identifiers, device serial numbers, Windows IDs and
-  private radio/security configuration in a separate private register.
 
 Document each verified item with date, tester, instrument or photograph,
 measurement and pass/fail outcome. Do not change a status from

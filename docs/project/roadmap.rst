@@ -40,7 +40,7 @@ working FleetBot.
 Schedule target
 ---------------
 
-The team plans to complete final integration and documentation during March
+We plan to complete final integration and documentation during March
 2027, with final delivery **no later than April 1, 2027** under the current
 requirements-document schedule.
 

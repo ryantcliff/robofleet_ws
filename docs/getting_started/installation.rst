@@ -17,7 +17,7 @@ Workspace build
    colcon build --symlink-install --executor sequential
    source install/setup.bash
 
-Use the team's current development branch. During the beacon-following work,
+Use our current development branch. During the beacon-following work,
 the integration branch is ``beacon-follow``.
 
 Bringup modes
