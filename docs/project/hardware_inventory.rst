@@ -112,6 +112,25 @@ Team-observed hardware
      - NVIDIA Jetson Orin Nano Developer Kit
      - Observed; inherited onboard compute
 
+Prior team operational demonstration (reported)
+---------------------------------------------
+
+The current team reports that the inherited FleetBot was driven around
+for **more than 30 minutes** with the complete onboard electrical
+system connected, including the motor battery and four ODESC motor
+controllers. This is useful evidence of sustained drivetrain operation
+under the conditions of that demonstration, not just a bench motor-spin
+test. The demonstration predates this inspection, and the following
+were not independently recorded in this audit: battery state of charge,
+actual DC-bus voltage or transients, peak load, braking events, test
+terrain, ambient/controller temperature, and detailed log data.
+
+This demonstration is a reason to **preserve the inherited working
+architecture during investigation**, not to assume the controller
+rating discrepancy is harmless. No replacement motor battery,
+controller, or converter has been selected. Any further powered tests
+should follow a documented electrical-risk review.
+
 Electrical architecture: observed versus unverified
 ---------------------------------------------------
 
