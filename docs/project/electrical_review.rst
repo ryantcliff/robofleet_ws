@@ -188,8 +188,10 @@ These are firmware values, not meter measurements. What we noticed:
 
 #. **The overvoltage trip (32 V) is above the 30 V MOSFET absolute maximum**
    (rating pending item A1). If the rating is right, the firmware protection
-   would trip only after the transistors' limit. We do not know whether 32 V
-   is the vendor default or was set by someone, and we have not changed it.
+   would trip only after the transistors' limit. The ODrive 0.5.6 documentation
+   gives 26 V as the default for the 24 V board, so someone raised the trip
+   level to 32 V, probably so the boards would run on the 29.4 V pack. We have
+   not changed it.
 #. **The brake resistor is disabled in firmware, and the configured resistance
    (0.47 ohm) does not match the fitted 2 ohm / 50 W parts** (items A8, C3; A8 has since confirmed the resistors are fitted and
    read 2 ohm).
@@ -211,11 +213,25 @@ On 2026-10-28 we checked the four braking resistors with the pack
 disconnected. **A8 is confirmed:** all four resistors are connected, and each
 reads 2 ohm, as labelled.
 
-This does not match the controller settings we read earlier, where the brake
-resistor is disabled and the configured resistance is 0.47 ohm. The hardware is
-ready for a brake-resistor setting, but the firmware does not yet use it. We
-will change the setting only after the reviewer approves the exact values, with
-the controllers powered and the robot on blocks.
+This did not match the controller settings we read earlier, where the brake
+resistor was disabled and the configured resistance was 0.47 ohm.
+
+On 2026-10-28, with the robot on blocks, the battery connected and the drive
+stack not running, we changed exactly two settings on each of the four
+controllers, one board at a time: ``brake_resistance`` from 0.47 to 2.0 ohm and
+``enable_brake_resistor`` from False to True. We saved each configuration (the
+board reboots) and read it back. On every board only those two settings
+differed afterwards, and the board was idle with no errors. The original values
+are kept so the change can be reversed.
+
+We did not change ``max_regen_current`` (0 A), ``dc_max_negative_current``
+(-5 A), the overvoltage ramp (disabled, and we are leaving it that way: the
+ODrive documentation warns that a ramp start below the normal bus voltage
+overheats the brake resistor), the 32 V overvoltage trip, or any motor setting.
+With ``max_regen_current`` at 0, regenerated current now goes to the resistors
+instead of back to the pack. The 50 W rating of the resistors for short, hard
+stops is still an open question for the reviewer, and we have not run a braking
+test (Stage C).
 
 Decision outcomes
 -----------------
