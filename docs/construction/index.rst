@@ -1,9 +1,9 @@
 Construction
 ============
 
-RoboFleet inherits a working rover platform. Current-year mechanical changes
-should improve reliability, weather-resistance, serviceability, or sensor
-integration without discarding functioning subsystems unnecessarily.
+The robot came with a working rover. Our mechanical changes should make it more
+reliable, weather-resistant, easy to service, or better at carrying sensors.
+We do not want to throw out parts that already work.
 
 .. toctree::
    :maxdepth: 1

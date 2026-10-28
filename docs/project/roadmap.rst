@@ -1,9 +1,8 @@
 Roadmap & Status
 ================
 
-This page tracks the 2026-2027 engineering direction without implying
-completion before hardware validation. The formal acceptance target is one
-working FleetBot.
+Where each piece of the project stands. We do not mark something done until it
+has been tested on the robot. What we owe is one working FleetBot.
 
 .. list-table::
    :header-rows: 1
@@ -11,42 +10,46 @@ working FleetBot.
 
    * - Work item
      - Status
-     - Next validation
-   * - Inherited ROS 2/Nav2 baseline
+     - What is next
+   * - Inherited ROS 2 / Nav2 baseline
      - :ready:`Audited / software tests present`
-     - Repeat on final hardware image
+     - Repeat on the final robot image
    * - RoboBeacon reception
      - :ready:`Integration path present`
-     - Outdoor valid-fix and goal-conversion test
-   * - Beacon-follow stand-off
+     - Outdoor test: valid fixes become goals
+   * - Beacon-follow distance
      - :ready:`Current target is 3 m`
-     - Open-field moving-beacon test; verify 1.5-3.0 m acceptance range
-   * - Beacon-loss fail-safe
+     - Open-field test with a moving beacon; check we land in 1.5-3.0 m
+   * - Beacon-loss stop
      - :ready:`Logic present`
-     - Stop/cancel test with RoboBeacon updates removed
+     - Cut the RoboBeacon updates and check it stops
+   * - Drive stack startup and sonar backup
+     - :ready:`Fixed and unit tested`
+     - Replug the Arduino and a motor controller on the robot
    * - BNO085 absolute heading
      - :planned:`Required hardware upgrade`
-     - I2C detection, axis check, magnetic calibration, known-direction test
+     - Detect it on I2C, check axes, calibrate, test a known direction
    * - RPLIDAR S2 30 m (IP65)
-     - :planned:`Planned purchase / integration`
-     - Update baud/udev settings and verify ``/scan`` + obstacle behavior
+     - :planned:`Planned purchase and integration`
+     - Update baud and udev, check ``/scan`` and obstacle behavior
+   * - Motor power safety
+     - :planned:`In progress`
+     - See :doc:`electrical_review`: voltage margin, a real stop, braking test
    * - Weather protection
      - :planned:`Formal requirement`
-     - Controlled light-rain/splash and alkaline-dust inspection; thermal check
-   * - Full required outdoor demo
+     - Light-rain / splash and alkaline-dust checks, plus a heat check
+   * - Full outdoor demo
      - :planned:`Final integration`
-     - RoboBeacon follow, obstacle awareness, e-stop, and documentation handoff
+     - Follow, obstacle awareness, e-stop and handoff documentation
 
-Schedule target
----------------
+Schedule
+--------
 
-We plan to complete final integration and documentation during March
-2027, with final delivery **no later than April 1, 2027** under the current
-requirements-document schedule.
+We plan to finish integration and documentation in March 2027. Final delivery
+is **no later than April 1, 2027**, per the requirements document.
 
-Documentation policy
---------------------
+Keeping these docs honest
+-------------------------
 
-When a hardware change is made, update this site, repository configuration, and
-the physical wiring/URDF records together so the next team inherits one
-consistent source of truth.
+When we change hardware, we update these pages, the repo config, and the wiring
+and URDF records together, so the next team gets one consistent picture.

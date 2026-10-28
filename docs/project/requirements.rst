@@ -1,14 +1,13 @@
 Requirements
 ============
 
-The 2026-2027 RoboFleet requirements document defines our
-contractual scope. RoboFleet builds on the inherited RoboFlock platform; we
-are responsible for completing, validating, and improving the
-system rather than claiming the inherited platform as new work.
+These come from our 2026-2027 RoboFleet requirements document, which sets our
+scope. We build on the inherited RoboFlock platform. We are responsible for
+finishing, testing and improving it, and we are not passing off the inherited
+parts as new work.
 
-The required delivery is **one working FleetBot**. Multi-FleetBot coordination
-is part of the broader RoboFleet concept but is not required for final
-acceptance this year.
+We have to deliver **one working FleetBot**. Multiple FleetBots working
+together is part of the bigger RoboFleet idea, but it is not required this year.
 
 Formal requirements
 -------------------
@@ -78,11 +77,12 @@ Formal requirements
 Key constraints
 ---------------
 
-* Retain the inherited Jetson Orin Nano / Ubuntu 22.04 / ROS 2 Humble baseline;
-  a compute upgrade is not planned within the current budget.
-* Reuse inherited hardware where practical and prioritize required reliability
-  upgrades: BNO085-class heading, an IP-rated LiDAR, and weather protection.
-* GPS acceptance tests require adequate outdoor GNSS visibility.
-* The complete robot is not promised to meet a formal IP rating.
-* Required work takes priority over optional return-home, Meshtastic, and
-  additional autonomy features.
+* We keep the Jetson Orin Nano / Ubuntu 22.04 / ROS 2 Humble setup. A computer
+  upgrade is not in the budget.
+* We reuse inherited hardware where we can, and spend effort on the upgrades we
+  need for reliability: a BNO085-class heading sensor, an IP-rated LiDAR, and
+  weather protection.
+* GPS acceptance tests need a clear view of the sky.
+* We do not promise the whole robot meets an IP rating.
+* Required work comes before optional extras like return-home, Meshtastic and
+  extra autonomy.

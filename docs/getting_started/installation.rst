@@ -1,13 +1,13 @@
 Installation & Build
 ====================
 
-RoboFleet continues to use the existing ROS 2 Humble software stack. The GitHub
-repository and recommended local workspace directory are now named
-``robofleet_ws``. Some inherited runtime/configuration identifiers retain the
-``roboflock`` name for compatibility.
+We are still on ROS 2 Humble. The GitHub repo and our workspace folder are now
+called ``robofleet_ws``. A few names inside the code still say ``roboflock``
+(config files, device rules, namespaces). We left those alone on purpose,
+because renaming them would break things that work.
 
-Workspace build
----------------
+Building the workspace
+----------------------
 
 .. code-block:: bash
 
@@ -17,28 +17,27 @@ Workspace build
    colcon build --symlink-install --executor sequential
    source install/setup.bash
 
-Use our current development branch. During the beacon-following work,
-the integration branch is ``beacon-follow``.
+We work from ``main``. ``beacon-follow`` is an older integration branch.
 
-Bringup modes
--------------
+Bringup options
+---------------
 
 .. list-table::
    :header-rows: 1
    :widths: 28 72
 
    * - Argument
-     - Purpose
+     - What it does
    * - ``hardware:=true``
-     - Starts real robot sensor and hardware drivers.
+     - Starts the real sensor and hardware drivers.
    * - ``hardware:=false``
-     - Starts navigation processes without the physical hardware drivers.
+     - Starts navigation without the hardware drivers.
    * - ``sim:=true``
-     - Runs the hardware-free integration path with simulated robot/sensors.
+     - Runs everything with a simulated robot and sensors, no hardware.
    * - ``slam:=true``
-     - SLAM Toolbox owns ``map -> odom``.
+     - SLAM Toolbox owns the ``map -> odom`` transform.
    * - ``slam:=false``
-     - GPS/global EKF owns ``map -> odom``; required for follow/home modes.
+     - The GPS / global EKF owns ``map -> odom``. Follow and home modes need this.
 
 Example
 -------
@@ -49,5 +48,24 @@ Example
 
 .. warning::
 
-   A successful build does **not** prove GPS heading, TF ownership, motor
-   safety, or sensor mounting are correct on the physical robot.
+   Building successfully does not tell you the GPS heading, the transforms, the
+   motor safety or the sensor mounting are right on the real robot.
+
+Joystick drive service
+----------------------
+
+The robot has a systemd service, ``roboflock-drive.service``, that starts the
+joystick drive stack (``bring_up.sh``) when the Jetson boots. The unit file is
+in ``src/bring_up/systemd``. We currently have it **turned off** on the robot.
+
+When it runs, ``diff_drive_controller`` connects to the four motor controllers
+by itself as soon as they show up on USB. The e-stop starts engaged. Pressing
+**Options** on the PS4 controller arms the motors, and **Cross** stops them. So
+if the motor battery is connected and the service is running, one button press
+makes the robot drive.
+
+.. code-block:: bash
+
+   sudo systemctl enable --now roboflock-drive    # start now and on every boot
+   sudo systemctl disable --now roboflock-drive   # stop now and on every boot
+   journalctl -u roboflock-drive -f               # watch what it is doing

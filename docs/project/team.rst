@@ -1,8 +1,8 @@
 2026–2027 Team
 ==============
 
-The 2026–2027 team continues the work of the previous RoboFlock team under the
-new project name **RoboFleet**.
+We are the 2026-2027 team continuing the previous RoboFlock team's work under the
+new name **RoboFleet**.
 
 Team members
 ------------
@@ -19,9 +19,9 @@ Client
 
 **Tom Izard**
 
-Continuity statement
---------------------
+Scope of our work
+--------------------------
 
-We are not presenting RoboFleet as a from-scratch design. We are responsible
-for understanding, validating, documenting, repairing, and extending the
-inherited platform.
+We did not design RoboFleet from scratch. The chassis, drivetrain and most of
+the ROS 2 software came from the previous team. Our job is to understand it,
+test it, fix it, document it, and extend it.

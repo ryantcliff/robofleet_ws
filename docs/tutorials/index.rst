@@ -1,7 +1,7 @@
 Tutorials
 =========
 
-Use these pages for repeatable validation and ROS inspection commands.
+Repeatable checks and useful ROS commands.
 
 .. toctree::
    :maxdepth: 1

@@ -1,34 +1,36 @@
 Hardware Commissioning
 ======================
 
-Commission one subsystem at a time before running autonomous follow mode.
+Bring up one subsystem at a time, and get each one working before you try
+autonomous follow mode.
 
+Inventory and the voltage problem
+---------------------------------
 
-Physical inventory and electrical hold (2026-10-28)
----------------------------------------------------
-
-See :doc:`../project/hardware_inventory` for the parts we have identified,
-:doc:`../project/hardware_photo_findings` for physical inspection and
-:doc:`../project/hardware_audit_checklist` for verification steps.
+Our parts list is in :doc:`../project/hardware_inventory`. What we saw when we
+inspected the robot is in :doc:`../project/hardware_photo_findings`, the checks
+we still want to do are in :doc:`../project/hardware_audit_checklist`, and the
+motor power details are in :doc:`../project/electrical_review`.
 
 .. warning::
 
-   The observed ODESC V4.2 motor controllers show 24 V markings while the
-   existing seven-series motor battery can reach 29.4 V fully charged.
-   Confirm the actual safe input rating of all four controllers before
-   reconnecting motor power. The currently observed scanner is RPLIDAR
-   A1M8; RPLIDAR S2 remains a planned upgrade. The required BNO085 is
-   not confirmed installed.
+   The motor controllers (ODESC V4.2) are marked 24 V, and our 7S motor
+   battery charges to 29.4 V. The power transistors on them are rated 30 V
+   absolute maximum, so there is almost no room above a full pack. Read
+   :doc:`../project/electrical_review` before you power the motors.
 
-Current hardware assignment
----------------------------
+   The LiDAR on the robot is an RPLIDAR A1M8. The S2 is only planned. We have
+   not installed the BNO085.
+
+What is on the robot
+--------------------
 
 .. list-table::
    :header-rows: 1
    :widths: 24 52 24
 
    * - Subsystem
-     - Current / intended device
+     - Device
      - Status
    * - Compute
      - NVIDIA Jetson Orin Nano
@@ -40,20 +42,20 @@ Current hardware assignment
      - u-blox NEO-M8P-2 -> HC-12 transmitter
      - :ready:`Configured / software path present`
    * - IMU
-     - BNO085-class IMU; Adafruit #4754 is the preferred board
+     - BNO085-class IMU; Adafruit #4754 is the board we would pick
      - :planned:`Required upgrade`
    * - LiDAR
      - RPLIDAR S2 30 m, IP65
-     - :planned:`Planned replacement for A1-class scanner`
+     - :planned:`Planned replacement for the A1`
    * - Short-range safety
-     - Existing ultrasonic sensor array / microcontroller
+     - Ultrasonic sensors on an Arduino Nano
      - :inherited:`Retain`
    * - Motors
-     - ODrive-controlled four-BLDC drivetrain
+     - Four BLDC motors on ODrive-type controllers
      - :inherited:`Inherited`
 
-BNO085 wiring target
---------------------
+BNO085 wiring
+-------------
 
 ::
 
@@ -62,29 +64,29 @@ BNO085 wiring target
    Jetson pin 27 (SDA)   --> BNO085 SDA
    Jetson pin 28 (SCL)   --> BNO085 SCL
 
-The current configuration expects ``/dev/i2c-1``, address ``0x4A``, and 50 Hz
-output. Verify the actual Linux bus and device address:
+The config expects bus ``/dev/i2c-1``, address ``0x4A``, and 50 Hz output.
+Check the real bus and address:
 
 .. code-block:: bash
 
    i2cdetect -l
    sudo i2cdetect -y -r 1
 
-RPLIDAR replacement
--------------------
+Swapping in the RPLIDAR S2
+--------------------------
 
-The requirements document identifies the **RPLIDAR S2 30 m (IP65)** as the
-planned weather-resistant replacement for the inherited A1-class scanner.
-After installation:
+Our requirements name the **RPLIDAR S2 30 m (IP65)** as the weatherproof
+replacement for the A1. After it is installed:
 
-* confirm the USB adapter's actual vendor/product ID;
-* update the udev rule if the new adapter does not match the inherited CP2102 rule;
-* update the required serial baud rate for the purchased S2 model;
-* verify ``/scan``, timestamps, frame ID, and Nav2 obstacle behavior before field testing.
+* check the USB adapter's real vendor and product ID;
+* change the udev rule if the new adapter does not match the old CP2102 rule;
+* set the serial baud rate that the S2 needs;
+* confirm ``/scan``, its timestamps, the frame ID and Nav2's obstacle behavior
+  before any field test.
 
 Stable device names
 -------------------
 
-The repository includes udev rules for stable paths such as
-``/dev/ublox_gps`` and ``/dev/rplidar_usb``. Recheck USB vendor/product IDs
-whenever a sensor or USB adapter is replaced.
+The repo has udev rules so the devices keep fixed paths, like ``/dev/ublox_gps``
+and ``/dev/rplidar_usb``. If you change a sensor or USB adapter, check its
+vendor and product ID again.
