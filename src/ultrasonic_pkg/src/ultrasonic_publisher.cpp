@@ -47,8 +47,30 @@ UltrasonicPublisher::UltrasonicPublisher(const rclcpp::NodeOptions & options)
 	sensor_data_.resize(frame_ids_.size());
 	sensor_msgs_.resize(frame_ids_.size());
 	
-	if (!initialize_sensors()) { return; }
+	if (!initialize_sensors())
+	{
+		// The Nano can enumerate after this node starts (seen at boot): keep
+		// retrying instead of leaving the node idle with no sensor readings.
+		RCLCPP_WARN(this->get_logger(), "Arduino not available, retrying every second");
+		retry_timer_ = this->create_wall_timer(
+			std::chrono::seconds(1),
+			[this]() {
+				if (initialize_sensors())
+				{
+					retry_timer_->cancel();
+					start_publishing();
+				}
+			}
+		);
+		return;
+	}
 	
+	start_publishing();
+}
+
+void
+UltrasonicPublisher::start_publishing()
+{
 	int period_ms = static_cast<int>(1000.0 / update_rate_);
 	timer_ = this->create_wall_timer(
 		std::chrono::milliseconds(period_ms),
@@ -75,8 +97,8 @@ UltrasonicPublisher::initialize_sensors()
 	}
 	else
 	{
-		RCLCPP_ERROR(this->get_logger(),
-			strerror(ret)
+		RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 10000,
+			"Arduino init failed: %s", strerror(ret)
 		);
 		return false;
 	}

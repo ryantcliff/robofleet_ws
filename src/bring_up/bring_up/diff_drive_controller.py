@@ -24,6 +24,7 @@ E_STOP_TIMEOUT = 0.5     # seconds without /e_stop before stopping
 CMD_VEL_TIMEOUT = 0.5    # seconds without /cmd_vel before commanding zero
 RECONNECT_PERIOD = 1.0   # seconds between attempts to find a lost ODrive
 RECONNECT_TIMEOUT = 0.5  # seconds each attempt may block the executor
+CONNECT_TIMEOUT = 2.0    # seconds to wait for each ODrive at startup
 
 # Raised when an ODrive drops off USB (seen when the motors energize).
 ODRIVE_LOST = (DeviceLostException, TransportException)
@@ -55,9 +56,19 @@ class DiffDriveController(Node):
             'Diff drive controller ready, idle until /e_stop is released')
 
     def _connect(self):
+        # Don't block startup waiting for ODrives: find_sync() with no timeout
+        # hung the node until the motors were powered. Missing ODrives go into
+        # _lost and are retried by _reconnect; the fault latch keeps the robot
+        # idle until all four are back and the operator presses Cross, then Options.
         for name, serial in SERIAL_NUMBERS.items():
             self.get_logger().info(f'Connecting to {name} ({serial})...')
-            self.drives[name] = self._open(serial)
+            try:
+                self.drives[name] = self._open(serial, CONNECT_TIMEOUT)
+            except (TimeoutError, *ODRIVE_LOST):
+                self._lost.add(name)
+                self._fault = True
+                self.get_logger().warn(f'{name} not found at startup, retrying')
+                continue
             self.get_logger().info(f'{name} connected')
 
     def _open(self, serial, timeout=None):
