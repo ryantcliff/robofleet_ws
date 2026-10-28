@@ -288,8 +288,14 @@ Where each Stage A item stands as of 2026-10-28.
      - The rear-left controller's heat sink is back on. We did not check the
        thermal interface material or how tightly it is secured.
    * - A10
-     - Not performed
-     - The pack and BMS protection details.
+     - Checked (label only)
+     - The pack label reads: BMS ChangFa 40 A; discharge 40 A continuous, 60 A
+       peak, 19 V minimum voltage; 25.2 V, 20 Ah (504 Wh); EVE 21700 50E cells,
+       7S4P; XT90 discharge port; XT60 charge port; charge 29.4 V at up to 5 A.
+       The label does not say which protections the BMS provides (overvoltage,
+       short-circuit and so on), and we have not found a BMS datasheet. It does
+       not say whether the discharge port accepts charge current from
+       regenerative braking.
 
 An item marked "Not performed" has not been checked and is not a pass.
 
