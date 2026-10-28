@@ -1,4 +1,4 @@
-# RoboFleet — Autonomous Mobile Robot (ROS 2)
+# RoboFleet - Autonomous Mobile Robot (ROS 2)
 
 This is our ROS 2 workspace for **RoboFleet**, an autonomous rover. This year we have to deliver one FleetBot that follows a GPS RoboBeacon using ROS 2 navigation and localization. The repo has the source code. The write-up, setup and architecture are on the documentation site below.
 
