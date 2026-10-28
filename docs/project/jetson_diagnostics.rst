@@ -1,4 +1,4 @@
-Jetson diagnostics — October 28, 2026
+Jetson diagnostics - October 28, 2026
 =====================================
 
 On October 28 we went through the FleetBot's Jetson Orin Nano and the drive
