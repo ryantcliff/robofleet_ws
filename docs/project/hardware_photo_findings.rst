@@ -70,15 +70,18 @@ A close-up of the rear-left (RL) controller shows the marking JMT G3002B
 on multiple power-stage components. This corresponds to the JieJie
 Microelectronics JMTG3002B N-channel power MOSFET. Manufacturer
 documentation specifies a **30 V absolute-maximum drain-source voltage**.
-This identification applies to RL; markings on FL, FR and RR have not
-yet been verified.
+The team subsequently confirmed that **all four controllers are identical
+hardware**. Thus the RL MOSFET identification is the working power-stage
+identification for FL, FR, RL and RR as well. Only the RL MOSFET
+markings were directly photographed in close-up; the other three have
+not been individually inspected at the component-marking level.
 
 The present HOT PAXX 7S motor pack is specified as 29.4 V fully
 charged. That provides only 0.6 V below the transistor's absolute
 maximum, even before switching and regenerative-braking transients.
 There is no acceptable engineering voltage margin for directly
-powering this RL board from the current pack. The 24V QC marking is
-consistent with a low-voltage ODESC variant.
+powering these four identical controllers from the current pack. The
+24V QC marking is consistent with a low-voltage ODESC variant.
 
 Keep the motor battery disconnected pending a reviewed compatible
 power architecture. The RL heat sink was removed for inspection;
