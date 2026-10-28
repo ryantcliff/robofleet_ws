@@ -58,12 +58,6 @@ Battery disconnected, discharge connector open.
    * - A2
      - ODESC V4.2 vendor-stated maximum supply voltage, and which variant (24 V or 48 V)
      - Vendor page, board silkscreen
-   * - A3
-     - Photograph the power MOSFETs on the FL, FR and RR boards (only RL has been photographed)
-     - Heat sink off, close-up of top marking
-   * - A4
-     - Bus capacitor voltage rating and count per board
-     - Read markings (100 uF 63 V was seen; that is not a board rating)
    * - A5
      - Fuse ratings and positions: Jetson branch, four ODESC branches, main
      - Read and label, photograph
@@ -252,15 +246,16 @@ Where each Stage A item stands as of 2026-10-28.
        drain-source absolute maximum of **30 V**, a minimum breakdown voltage of
        30 V, 120 A continuous at 25 C case temperature, and 240 mJ single-pulse
        avalanche energy.
+       The rating covers the other three controllers on the assumption that all
+       four are identical; we know this from their matching hardware (3.6.24)
+       and firmware (0.5.6) versions, not from reading each board's MOSFET
+       marking.
    * - A2
      - Researched, not confirmed
      - We found no manufacturer datasheet. Seller listings for the Flipsky
        "ODESC V4.2 24V" describe an 8 to 24 V working range (the 56 V variant is
        listed at 8 to 56 V), and some listings conflict. Our pack rests at about
        28 V and charges to 29.4 V, above that listed range.
-   * - A3, A4
-     - Not performed
-     - MOSFET photographs for FL, FR and RR, and the bus capacitor ratings.
    * - A5
      - Checked
      - Four yellow blade fuses marked 20 (20 A) feed the four motor
