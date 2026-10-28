@@ -258,10 +258,28 @@ Where each Stage A item stands as of 2026-10-28.
        "ODESC V4.2 24V" describe an 8 to 24 V working range (the 56 V variant is
        listed at 8 to 56 V), and some listings conflict. Our pack rests at about
        28 V and charges to 29.4 V, above that listed range.
-   * - A3 to A7
+   * - A3, A4
      - Not performed
-     - MOSFET photographs for FL, FR and RR, bus capacitor ratings, fuse
-       ratings, wiring condition, and the master disconnect and physical stop.
+     - MOSFET photographs for FL, FR and RR, and the bus capacitor ratings.
+   * - A5
+     - Checked
+     - Four yellow blade fuses marked 20 (20 A) feed the four motor
+       controllers, and one orange blade fuse marked 5 (5 A) feeds the Jetson.
+       There is no main fuse between the battery and the motor fuse block. We
+       read the printed numbers and did not measure anything. Blade fuses are
+       commonly rated 32 V DC; the reviewer should confirm the rating of the
+       fuses we have.
+   * - A6
+     - Checked
+     - The battery cable is 10 AWG, marked 200 C, red on the positive terminal
+       and black on the negative. We saw no melting, discoloration or burnt
+       smell, nothing moved when we tugged the wires at the fuse block, and the
+       cable is held in place near the block. This was a visual check.
+   * - A7
+     - Checked, none present
+     - No master disconnect, breaker, switch or physical stop sits in the motor
+       power path. The only way to cut motor power is to unplug the battery at
+       its XT90 connector.
    * - A8
      - Confirmed
      - See the section above.
