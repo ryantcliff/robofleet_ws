@@ -32,8 +32,8 @@ Team-observed hardware
      - Observed; radio chip/config unverified
    * - RF-002
      - 4
-     - ODESC V4.2 motor controllers; FL, FR, RL, RR
-     - Observed; voltage ratings unresolved
+     - Four identical ODESC V4.2 motor controllers; FL, FR, RL, RR
+     - Identical hardware confirmed by team; unsafe 7S voltage margin
    * - RF-003
      - 1
      - Zeee 6000 mAh 3S 11.1 V 66.6 Wh LiPo (Jetson battery)
@@ -120,6 +120,10 @@ Electrical architecture: observed versus unverified
 * HOT PAXX 7S motor battery -> four fused ODESC supplies is described
   by team inspection. Record exact fuse values, wire gauge, disconnects,
   controller bus ratings and transient/regen protection before energizing.
+* Team confirms all four ODESC boards are identical. A close-up of RL identifies
+  JMTG3002B MOSFETs with 30 V absolute-maximum drain-source rating, only 0.6 V
+  above the 7S battery full-charge voltage. Avoid direct 7S operation;
+  investigate a compatible motor power architecture.
 * Four orange aluminum-cased resistors are marked 50W 2RJ, consistent
   with 2 ohm / 50 W braking resistors. Their wiring, firmware configuration,
   electrical pulse rating and heat sinking remain to be checked.
