@@ -126,11 +126,13 @@ def follow_nodes(context):
             Node(package='bring_up', executable='e_stop', name='e_stop', output='screen'),
             Node(package='bring_up', executable='ps4_teleop', name='ps4_teleop',
                  output='screen', parameters=[{'cmd_vel_topic': 'cmd_vel_joy'}]),
+            # Between twist_mux and the motors: blocks forward motion near obstacles.
             Node(package='bring_up', executable='ultrasonic_estop', name='ultrasonic_estop',
-                 output='screen'),
+                 output='screen', remappings=[('cmd_vel_in', 'cmd_vel_mux'),
+                                              ('cmd_vel_out', 'cmd_vel_safe')]),
             Node(package='bring_up', executable='diff_drive_controller',
                  name='diff_drive_controller', output='screen',
-                 parameters=[{'cmd_vel_topic': 'cmd_vel_mux'}]),
+                 parameters=[{'cmd_vel_topic': 'cmd_vel_safe'}]),
         ]
         if enabled(context, 'station'):
             nodes.append(Node(

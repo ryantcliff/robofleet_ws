@@ -29,8 +29,9 @@ AXIS_DPAD_X    = 6      #angular
 # -----------------------------------------------------------------------------
 
 # Speed limits
-LINEAR_MIN,  LINEAR_MAX  = 0.5, 10.0
-ANGULAR_MIN, ANGULAR_MAX = 0.5, 10.0
+# Capped so the 0.5 m ultrasonic e-stop can still stop the robot in time.
+LINEAR_MIN,  LINEAR_MAX  = 0.5, 1.0
+ANGULAR_MIN, ANGULAR_MAX = 0.5, 2.0
 SPEED_STEP = 0.5
 STEER_DEADZONE = 0.1
 

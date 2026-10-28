@@ -68,9 +68,11 @@ class MeshtasticBridge(Node):
         any_type = ParameterDescriptor(dynamic_typing=True)
         self.home_node = parse_node_id(
             self.declare_parameter('home_node_id', '!6c743480', any_type).value)
-        commanders = self.declare_parameter('command_node_ids', '3145785460', any_type).value
+        commanders = self.declare_parameter(
+            'command_node_ids', '3145785460,!6c743480', any_type).value
         if not isinstance(commanders, (list, tuple)):
-            commanders = str(commanders).split(',')  # default: Tom's T-Beam !bb80e074
+            # default: Tom's T-Beam !bb80e074 and the home station (tablet on the HOME node)
+            commanders = str(commanders).split(',')
         self.command_nodes = [parse_node_id(n) for n in commanders]
         self.status_channel = self.declare_parameter('status_channel', 1).value
         self.max_home_age = self.declare_parameter('max_home_age', 1800.0).value
