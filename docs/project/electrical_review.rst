@@ -187,9 +187,11 @@ trip **32.0 V**, undervoltage trip 18.0 V, bus current 0.0 A.
 These are firmware values, not meter measurements. What we noticed:
 
 #. **The overvoltage trip (32 V) is above the 30 V MOSFET absolute maximum**
-   (rating pending item A1). If the rating is right, the firmware protection
-   would trip only after the transistors' limit. We do not know whether 32 V
-   is the vendor default or was set by someone, and we have not changed it.
+   (the rating is confirmed in the datasheet, item A1). The firmware protection
+   therefore trips only after the transistors' limit. The ODrive 0.5.6 documentation
+   gives 26 V as the default for the 24 V board, so someone raised the trip
+   level to 32 V, probably so the boards would run on the 29.4 V pack. We have
+   not changed it.
 #. **The brake resistor is disabled in firmware, and the configured resistance
    (0.47 ohm) does not match the fitted 2 ohm / 50 W parts** (items A8, C3; A8 has since confirmed the resistors are fitted and
    read 2 ohm).
@@ -211,11 +213,91 @@ On 2026-10-28 we checked the four braking resistors with the pack
 disconnected. **A8 is confirmed:** all four resistors are connected, and each
 reads 2 ohm, as labelled.
 
-This does not match the controller settings we read earlier, where the brake
-resistor is disabled and the configured resistance is 0.47 ohm. The hardware is
-ready for a brake-resistor setting, but the firmware does not yet use it. We
-will change the setting only after the reviewer approves the exact values, with
-the controllers powered and the robot on blocks.
+This did not match the controller settings we read earlier, where the brake
+resistor was disabled and the configured resistance was 0.47 ohm.
+
+On 2026-10-28, with the robot on blocks, the battery connected and the drive
+stack not running, we changed exactly two settings on each of the four
+controllers, one board at a time: ``brake_resistance`` from 0.47 to 2.0 ohm and
+``enable_brake_resistor`` from False to True. We saved each configuration (the
+board reboots) and read it back. On every board only those two settings
+differed afterwards, and the board was idle with no errors. The original values
+are kept so the change can be reversed.
+
+We did not change ``max_regen_current`` (0 A), ``dc_max_negative_current``
+(-5 A), the overvoltage ramp (disabled, and we are leaving it that way: the
+ODrive documentation warns that a ramp start below the normal bus voltage
+overheats the brake resistor), the 32 V overvoltage trip, or any motor setting.
+With ``max_regen_current`` at 0, regenerated current now goes to the resistors
+instead of back to the pack. The 50 W rating of the resistors for short, hard
+stops is still an open question for the reviewer, and we have not run a braking
+test (Stage C).
+
+Stage A status
+--------------
+
+Where each Stage A item stands as of 2026-10-28.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 8 22 70
+
+   * - Item
+     - Status
+     - Evidence
+   * - A1
+     - Confirmed
+     - The JMTG3002B datasheet (JieJie, version 1.2, as hosted by several
+       distributors; we did not check the manufacturer's own site) gives a
+       drain-source absolute maximum of **30 V**, a minimum breakdown voltage of
+       30 V, 120 A continuous at 25 C case temperature, and 240 mJ single-pulse
+       avalanche energy.
+   * - A2
+     - Researched, not confirmed
+     - We found no manufacturer datasheet. Seller listings for the Flipsky
+       "ODESC V4.2 24V" describe an 8 to 24 V working range (the 56 V variant is
+       listed at 8 to 56 V), and some listings conflict. Our pack rests at about
+       28 V and charges to 29.4 V, above that listed range.
+   * - A3, A4
+     - Not performed
+     - MOSFET photographs for FL, FR and RR, and the bus capacitor ratings.
+   * - A5
+     - Checked
+     - Four yellow blade fuses marked 20 (20 A) feed the four motor
+       controllers, and one orange blade fuse marked 5 (5 A) feeds the Jetson.
+       There is no main fuse between the battery and the motor fuse block. We
+       read the printed numbers and did not measure anything. Blade fuses are
+       commonly rated 32 V DC; the reviewer should confirm the rating of the
+       fuses we have.
+   * - A6
+     - Checked
+     - The battery cable is 10 AWG, marked 200 C, red on the positive terminal
+       and black on the negative. We saw no melting, discoloration or burnt
+       smell, nothing moved when we tugged the wires at the fuse block, and the
+       cable is held in place near the block. This was a visual check.
+   * - A7
+     - Checked, none present
+     - No master disconnect, breaker, switch or physical stop sits in the motor
+       power path. The only way to cut motor power is to unplug the battery at
+       its XT90 connector.
+   * - A8
+     - Confirmed
+     - See the section above.
+   * - A9
+     - Checked
+     - The rear-left controller's heat sink is back on. We did not check the
+       thermal interface material or how tightly it is secured.
+   * - A10
+     - Checked (label only)
+     - The pack label reads: BMS ChangFa 40 A; discharge 40 A continuous, 60 A
+       peak, 19 V minimum voltage; 25.2 V, 20 Ah (504 Wh); EVE 21700 50E cells,
+       7S4P; XT90 discharge port; XT60 charge port; charge 29.4 V at up to 5 A.
+       The label does not say which protections the BMS provides (overvoltage,
+       short-circuit and so on), and we have not found a BMS datasheet. It does
+       not say whether the discharge port accepts charge current from
+       regenerative braking.
+
+An item marked "Not performed" has not been checked and is not a pass.
 
 Decision outcomes
 -----------------
