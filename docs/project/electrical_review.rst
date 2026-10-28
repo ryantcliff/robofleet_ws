@@ -283,9 +283,13 @@ Where each Stage A item stands as of 2026-10-28.
    * - A8
      - Confirmed
      - See the section above.
-   * - A9, A10
+   * - A9
+     - Checked
+     - The rear-left controller's heat sink is back on. We did not check the
+       thermal interface material or how tightly it is secured.
+   * - A10
      - Not performed
-     - RL heat sink reattachment, and the pack and BMS protection details.
+     - The pack and BMS protection details.
 
 An item marked "Not performed" has not been checked and is not a pass.
 
