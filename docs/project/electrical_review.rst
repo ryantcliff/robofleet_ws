@@ -187,8 +187,8 @@ trip **32.0 V**, undervoltage trip 18.0 V, bus current 0.0 A.
 These are firmware values, not meter measurements. What we noticed:
 
 #. **The overvoltage trip (32 V) is above the 30 V MOSFET absolute maximum**
-   (rating pending item A1). If the rating is right, the firmware protection
-   would trip only after the transistors' limit. The ODrive 0.5.6 documentation
+   (the rating is confirmed in the datasheet, item A1). The firmware protection
+   therefore trips only after the transistors' limit. The ODrive 0.5.6 documentation
    gives 26 V as the default for the 24 V board, so someone raised the trip
    level to 32 V, probably so the boards would run on the 29.4 V pack. We have
    not changed it.
@@ -232,6 +232,44 @@ With ``max_regen_current`` at 0, regenerated current now goes to the resistors
 instead of back to the pack. The 50 W rating of the resistors for short, hard
 stops is still an open question for the reviewer, and we have not run a braking
 test (Stage C).
+
+Stage A status
+--------------
+
+Where each Stage A item stands as of 2026-10-28.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 8 22 70
+
+   * - Item
+     - Status
+     - Evidence
+   * - A1
+     - Confirmed
+     - The JMTG3002B datasheet (JieJie, version 1.2, as hosted by several
+       distributors; we did not check the manufacturer's own site) gives a
+       drain-source absolute maximum of **30 V**, a minimum breakdown voltage of
+       30 V, 120 A continuous at 25 C case temperature, and 240 mJ single-pulse
+       avalanche energy.
+   * - A2
+     - Researched, not confirmed
+     - We found no manufacturer datasheet. Seller listings for the Flipsky
+       "ODESC V4.2 24V" describe an 8 to 24 V working range (the 56 V variant is
+       listed at 8 to 56 V), and some listings conflict. Our pack rests at about
+       28 V and charges to 29.4 V, above that listed range.
+   * - A3 to A7
+     - Not performed
+     - MOSFET photographs for FL, FR and RR, bus capacitor ratings, fuse
+       ratings, wiring condition, and the master disconnect and physical stop.
+   * - A8
+     - Confirmed
+     - See the section above.
+   * - A9, A10
+     - Not performed
+     - RL heat sink reattachment, and the pack and BMS protection details.
+
+An item marked "Not performed" has not been checked and is not a pass.
 
 Decision outcomes
 -----------------
