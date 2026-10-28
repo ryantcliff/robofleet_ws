@@ -7,12 +7,13 @@ RoboFlock equipment. The required 2026–2027 delivery is one FleetBot.
 
 .. warning::
 
-   Do not energize the motor drivetrain until all four motor-controller
-   voltage ratings have been positively identified. The photographed ODESC
-   V4.2 boards have visible 24 V QC markings. The HOT PAXX 7S4P pack has a
-   labeled 29.4 V full-charge voltage. A controller rated only to 24 V
-   cannot safely be assumed compatible with that pack. Capacitors marked
-   63 V do not establish the safe input voltage of the entire board.
+   Keep motor power disconnected. The team has confirmed all four
+   ODESC V4.2 controllers are identical. An RL board inspection identified
+   30 V maximum-rated JMTG3002B power MOSFETs, while the installed 7S4P
+   battery can reach 29.4 V fully charged. This leaves inadequate voltage
+   margin for switching and regenerative transients; the existing
+   battery-controller pairing should not be used. Select and review a
+   compatible motor-power architecture before further drive testing.
 
 Team-observed hardware
 ----------------------
