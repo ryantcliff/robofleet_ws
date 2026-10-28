@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
+#include <poll.h>
 #include <unistd.h>
 #include "ultrasonic_pkg/ultrasonic_usb.hpp"
 
@@ -58,12 +59,13 @@ int init_arduino(void)
 	/* Local modes */
 	tty.c_lflag = 0;
 	
-	/* Special characters 
-	 *   Read minimum PACKETLEN (8) characters
-	 *   0.5s timeout
+	/* Special characters
+	 *   Non-blocking reads; read_packet() waits with its own deadline.
+	 *   (VMIN > 0 blocks forever until the first byte arrives, which hung
+	 *   the node when the Nano missed a request, e.g. while it resets on open.)
 	 */
-	tty.c_cc[VMIN] = PACKETLEN;
-	tty.c_cc[VTIME] = 5;
+	tty.c_cc[VMIN] = 0;
+	tty.c_cc[VTIME] = 0;
 	
 	/* Apply new configuration immediately */
 	if (tcsetattr(arduino_fd, TCSANOW, &tty) != 0)
@@ -80,6 +82,34 @@ int init_arduino(void)
 	return 0;
 }
 
+/* Read up to len bytes, giving up after timeout_ms. Returns bytes read. */
+static int read_packet(char *buf, int len, int timeout_ms)
+{
+	auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
+	int got = 0;
+	while (got < len)
+	{
+		auto left = std::chrono::duration_cast<std::chrono::milliseconds>(
+			deadline - std::chrono::steady_clock::now()).count();
+		if (left <= 0)
+		{
+			break;
+		}
+		struct pollfd pfd = { arduino_fd, POLLIN, 0 };
+		if (poll(&pfd, 1, (int)left) <= 0)
+		{
+			break;
+		}
+		int n = read(arduino_fd, buf + got, len - got);
+		if (n <= 0)
+		{
+			break;
+		}
+		got += n;
+	}
+	return got;
+}
+
 void get_arduino_data (uint8_t *l, uint8_t *c, uint8_t *r)
 {
 	char read_buf[PACKETLEN];
@@ -94,12 +124,9 @@ void get_arduino_data (uint8_t *l, uint8_t *c, uint8_t *r)
 		*r = 0xFF;
 		return;
 	}
-	/* Small delay to give Arduino time */
-	usleep (10000);
-	
-	/* Read 8 bytes from Arduino */
+	/* Read 8 bytes from Arduino (replies take 15-35 ms; a few never come) */
 	memset(read_buf, 0, sizeof(read_buf));
-	int num_bytes = read(arduino_fd, read_buf, sizeof(read_buf));
+	int num_bytes = read_packet(read_buf, sizeof(read_buf), REPLY_TIMEOUT_MS);
 	
 	/* If error, set data to "invalid" */
 	if (num_bytes < 0)

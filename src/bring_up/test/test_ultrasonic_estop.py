@@ -70,3 +70,30 @@ def test_required_readings_of_one_stops_immediately():
     logic = make(required=1)
     logic.on_range('center', 0.10, now=0.00)
     assert logic.unsafe(now=0.01)
+
+
+def test_stale_lists_silent_sensors():
+    logic = make()
+    assert logic.stale(now=0.0) == ['left', 'center', 'right']  # never heard from
+    logic.on_range('left', 1.0, now=0.0)
+    logic.on_range('center', 1.0, now=0.0)
+    logic.on_range('right', 1.0, now=0.5)
+    assert logic.stale(now=1.2) == ['left', 'center']
+
+
+def blocked():
+    logic = make()
+    logic.on_range('center', 0.10, now=0.00)
+    logic.on_range('center', 0.10, now=0.05)
+    return logic
+
+
+def test_blocked_stops_forward_only():
+    logic = blocked()
+    assert logic.limit_forward(0.5, now=0.06) == 0.0
+    assert logic.limit_forward(-0.5, now=0.06) == -0.5  # reverse away
+    assert logic.limit_forward(0.0, now=0.06) == 0.0    # turn in place
+
+
+def test_clear_passes_forward():
+    assert make().limit_forward(0.5, now=0.0) == 0.5

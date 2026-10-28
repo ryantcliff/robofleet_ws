@@ -1,7 +1,8 @@
 twist_mux:
   ros__parameters:
-    # Output is remapped to /cmd_vel_mux in bringup.launch.py; diff_drive_controller
-    # subscribes there in follow mode.
+    # Output is remapped to /cmd_vel_mux in bringup.launch.py. ultrasonic_estop
+    # filters it into /cmd_vel_safe (blocking forward motion near obstacles),
+    # which diff_drive_controller drives from.
     topics:
       navigation:
         # Nav2's velocity_smoother output (navigation_launch.py remaps it to /cmd_vel).
@@ -12,10 +13,3 @@ twist_mux:
         topic: /cmd_vel_joy
         timeout: 0.5
         priority: 100
-      estop:
-        # ultrasonic_estop only publishes while an obstacle is within
-        # min_safe_distance; a short timeout means twist_mux falls back to
-        # navigation/joystick within ~0.3s of the obstacle clearing.
-        topic: /cmd_vel_estop
-        timeout: 0.3
-        priority: 200
