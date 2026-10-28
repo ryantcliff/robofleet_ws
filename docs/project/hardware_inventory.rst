@@ -1,4 +1,4 @@
-FleetBot hardware inventory — physical audit (2026-10-28)
+FleetBot hardware inventory - physical audit (2026-10-28)
 =========================================================
 
 This is a list of the hardware we have physically found and looked at. It is not a
@@ -120,8 +120,7 @@ What we have identified
 A driving demonstration we were told about
 ------------------------------------------
 
-We were told that the inherited FleetBot was driven around for **more than 30
-minutes** with everything connected, including the motor battery and all four
+We were told that the inherited FleetBot was driven around with everything connected, including the motor battery and all four
 controllers. That is good evidence the drivetrain works for a sustained run, and
 it was more than a bench spin test. It happened before our inspection, and
 nobody recorded the battery charge, the bus voltage or spikes, the peak load,
