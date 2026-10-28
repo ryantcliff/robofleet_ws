@@ -2,7 +2,7 @@ RoboFleet Documentation
 =======================
 
 **RoboFleet** is the 2026-2027 continuation of the autonomous rover previously
-known as **RoboFlock**. The current team is building on the inherited mechanical
+known as **RoboFlock**. We are building on the inherited mechanical
 and ROS 2 platform rather than restarting from scratch.
 
 The broader RoboFleet concept is a group of **FleetBots** able to follow a

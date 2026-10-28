@@ -16,13 +16,17 @@ class UltrasonicLogic:
     A sensor counts as blocked after required_readings consecutive readings
     closer than min_safe_distance, so a single glitched echo doesn't stop the
     robot. One reading at or beyond the limit (including +inf, no echo) clears
-    it. Sensors with no reading in max_reading_age are ignored.
+    it. Sensors with no reading in max_reading_age can't be trusted: they are
+    ignored, or with fail_closed they call for a stop (forward motion blocked)
+    so a dead or unplugged sensor can't leave the robot unguarded.
     """
 
-    def __init__(self, frame_ids, min_safe_distance, max_reading_age, required_readings):
+    def __init__(self, frame_ids, min_safe_distance, max_reading_age, required_readings,
+                 fail_closed=False):
         self.min_safe_distance = min_safe_distance
         self.max_reading_age = max_reading_age
         self.required_readings = required_readings
+        self.fail_closed = fail_closed
         self._close_count = {frame_id: 0 for frame_id in frame_ids}
         self._last_reading = {}
 
@@ -41,6 +45,8 @@ class UltrasonicLogic:
 
     def unsafe(self, now):
         stale = self.stale(now)
+        if self.fail_closed and stale:
+            return True
         for frame_id, count in self._close_count.items():
             if frame_id in stale:
                 continue  # no recent reading from this sensor
@@ -77,6 +83,9 @@ class UltrasonicEstop(Node):
         self.declare_parameter('publish_rate', 20.0)       # Hz, matches the sensors
         # Consecutive close readings before stopping (20 Hz sensors: 2 = ~50 ms)
         self.declare_parameter('required_readings', 2)
+        # A sensor with no recent reading blocks forward motion instead of being
+        # ignored (the Arduino can be unplugged, late at boot, or crashed).
+        self.declare_parameter('fail_closed', True)
 
         self.frame_ids = self.get_parameter('frame_ids').value
         self.min_safe_distance = self.get_parameter('min_safe_distance').value
@@ -84,7 +93,8 @@ class UltrasonicEstop(Node):
         self._logic = UltrasonicLogic(
             self.frame_ids, self.min_safe_distance,
             self.get_parameter('max_reading_age').value,
-            self.get_parameter('required_readings').value)
+            self.get_parameter('required_readings').value,
+            fail_closed=self.get_parameter('fail_closed').value)
 
         for frame_id in self.frame_ids:
             topic = f'range/{frame_id}'
@@ -122,9 +132,11 @@ class UltrasonicEstop(Node):
         now = time.monotonic()
         stale = self._logic.stale(now)
         if stale:
-            # These sensors can't stop the robot; say so rather than fail silently.
+            # These sensors can't be trusted; say so rather than fail silently.
+            action = ('blocking forward motion' if self._logic.fail_closed
+                      else 'not guarding those')
             self.get_logger().warn(
-                f'No recent reading from {", ".join(stale)}: not guarding those',
+                f'No recent reading from {", ".join(stale)}: {action}',
                 throttle_duration_sec=5.0)
         # An obstacle can appear between commands (Nav2 sends only 10 Hz):
         # block a recent forward command now rather than on the next one.

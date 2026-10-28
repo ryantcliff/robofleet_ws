@@ -7,7 +7,7 @@ Commission one subsystem at a time before running autonomous follow mode.
 Physical inventory and electrical hold (2026-10-28)
 ---------------------------------------------------
 
-See :doc:`../project/hardware_inventory` for the team-observed parts,
+See :doc:`../project/hardware_inventory` for the parts we have identified,
 :doc:`../project/hardware_photo_findings` for physical inspection and
 :doc:`../project/hardware_audit_checklist` for verification steps.
 

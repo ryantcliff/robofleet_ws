@@ -97,3 +97,48 @@ def test_blocked_stops_forward_only():
 
 def test_clear_passes_forward():
     assert make().limit_forward(0.5, now=0.0) == 0.5
+
+
+def make_fail_closed():
+    return UltrasonicLogic(['left', 'center', 'right'], min_safe_distance=0.15,
+                           max_reading_age=1.0, required_readings=2, fail_closed=True)
+
+
+def fresh_and_clear(logic, now):
+    for frame_id in ('left', 'center', 'right'):
+        logic.on_range(frame_id, 1.0, now=now)
+
+
+def test_fail_closed_blocks_forward_with_no_readings_ever():
+    logic = make_fail_closed()
+    assert logic.unsafe(now=0.0)
+    assert logic.limit_forward(0.5, now=0.0) == 0.0
+
+
+def test_fail_closed_still_allows_reverse_and_turning():
+    logic = make_fail_closed()
+    assert logic.limit_forward(-0.3, now=0.0) == -0.3
+    assert logic.limit_forward(0.0, now=0.0) == 0.0
+
+
+def test_fail_closed_one_silent_sensor_blocks_forward():
+    logic = make_fail_closed()
+    fresh_and_clear(logic, now=0.0)
+    assert not logic.unsafe(now=0.5)
+    logic.on_range('left', 1.0, now=1.2)
+    logic.on_range('center', 1.0, now=1.2)  # right has gone quiet
+    assert logic.unsafe(now=1.3)
+    assert logic.limit_forward(0.5, now=1.3) == 0.0
+
+
+def test_fail_closed_recovers_when_the_sensor_returns():
+    logic = make_fail_closed()
+    assert logic.unsafe(now=0.0)
+    fresh_and_clear(logic, now=0.1)
+    assert not logic.unsafe(now=0.2)
+    assert logic.limit_forward(0.5, now=0.2) == 0.5
+
+
+def test_default_is_still_fail_open():
+    assert not make().fail_closed
+    assert not make().unsafe(now=5.0)

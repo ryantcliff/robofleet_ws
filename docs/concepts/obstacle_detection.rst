@@ -7,7 +7,7 @@ perception and ultrasonic sensing as a short-range fail-safe.
 Current-year environmental upgrade
 ----------------------------------
 
-The team plans to replace the exposed A1-class LiDAR with an IP-rated
+We plan to replace the exposed A1-class LiDAR with an IP-rated
 RPLIDAR S2-class scanner so dust and rain are addressed at the sensor enclosure
 level.
 

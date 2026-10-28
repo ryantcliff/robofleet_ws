@@ -189,11 +189,11 @@ class DiffDriveController(Node):
         v = msg.linear.x
         w = msg.angular.z
         self._moving = v != 0.0 or w != 0.0
-        print(f"cmd_vel → linear: {v}, angular: {w}")
+        self.get_logger().debug(f"cmd_vel linear: {v}, angular: {w}")
 
         v_left  = v - (w * WHEEL_SEPARATION / 2.0)
         v_right = v + (w * WHEEL_SEPARATION / 2.0)
-        print(f"v_left: {v_left} m/s, v_right: {v_right} m/s")
+        self.get_logger().debug(f"v_left: {v_left} m/s, v_right: {v_right} m/s")
 
         turns_left  = (v_left  / (2.0 * math.pi * WHEEL_RADIUS)) * GEAR_RATIO
         turns_right = (v_right / (2.0 * math.pi * WHEEL_RADIUS)) * GEAR_RATIO

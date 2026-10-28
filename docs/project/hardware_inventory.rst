@@ -1,5 +1,5 @@
 FleetBot hardware inventory — physical audit (2026-10-28)
-========================================================
+=========================================================
 
 This is an inventory of physically identified hardware, not a validated
 electrical schematic or proof of operation. RoboFleet continues inherited
@@ -7,7 +7,7 @@ RoboFlock equipment. The required 2026–2027 delivery is one FleetBot.
 
 .. warning::
 
-   Keep motor power disconnected. The team has confirmed all four
+   Keep motor power disconnected. We have confirmed all four
    ODESC V4.2 controllers are identical. An RL board inspection identified
    30 V maximum-rated JMTG3002B power MOSFETs, while the installed 7S4P
    battery can reach 29.4 V fully charged. This leaves inadequate voltage
@@ -15,8 +15,8 @@ RoboFlock equipment. The required 2026–2027 delivery is one FleetBot.
    battery-controller pairing should not be used. Select and review a
    compatible motor-power architecture before further drive testing.
 
-Team-observed hardware
-----------------------
+Hardware we have identified
+---------------------------
 
 .. list-table::
    :header-rows: 1
@@ -112,10 +112,10 @@ Team-observed hardware
      - NVIDIA Jetson Orin Nano Developer Kit
      - Observed; inherited onboard compute
 
-Prior team operational demonstration (reported)
----------------------------------------------
+Reported driving demonstration
+------------------------------
 
-The current team reports that the inherited FleetBot was driven around
+We understand that the inherited FleetBot was driven around
 for **more than 30 minutes** with the complete onboard electrical
 system connected, including the motor battery and four ODESC motor
 controllers. This is useful evidence of sustained drivetrain operation

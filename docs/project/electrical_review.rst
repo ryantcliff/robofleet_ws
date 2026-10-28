@@ -1,12 +1,11 @@
 Electrical review checklist
 ===========================
 
-A working checklist for the motor-power review that
-:doc:`hardware_audit_checklist` lists as Priority 0. It adds measurement steps
-and a place to record results. It is a planning aid, **not** an engineering
-sign-off: pass criteria and margins are for the qualified reviewer to set, and
-nothing here authorizes driving, braking tests, or changes to pack or
-controller wiring.
+This is our working checklist for the motor-power review listed as Priority 0
+in :doc:`hardware_audit_checklist`. It adds measurement steps and a place to
+record results. It is a planning aid, **not** an engineering sign-off: we leave
+pass criteria and margins to the qualified reviewer, and nothing here
+authorizes driving, braking tests, or changes to pack or controller wiring.
 
 Current state against the hold
 ------------------------------
@@ -17,14 +16,14 @@ Current state against the hold
    * - The documentation says
      - Keep motor power disconnected. Do not reconnect the current 7S pack
        (:doc:`hardware_inventory`, :doc:`hardware_audit_checklist`).
-   * - The robot on 2026-10-28
-     - The 7S motor battery was connected and all four ODESC controllers
+   * - Our robot on 2026-10-28
+     - We had the 7S motor battery connected and all four ODESC controllers
        enumerated on USB. The drive stack was not running and its boot service
        was disabled. The robot was on blocks.
    * - Consequence
-     - The hold is not being followed. Either disconnect the pack, or record
+     - We are not following the hold. We either disconnect the pack, or record
        who accepted the risk, under what conditions and until when, and update
-       the documentation either way.
+       this documentation either way.
 
 The concern
 -----------
@@ -33,12 +32,13 @@ The concern
   60 A peak (from labels).
 * The inspected RL controller's power MOSFET is marked JMTG3002B, identified as
   30 V drain-source absolute maximum. **Confirm against the current
-  manufacturer datasheet** (item A1). The other three boards are reported to be
-  identical but were not individually photographed.
+  manufacturer datasheet** (item A1). The other three boards are identical to
+  it, but we have not yet photographed them individually.
 * Headroom at full charge is 0.6 V before switching spikes and regeneration.
 * The gate driver's 6-60 V range does not rate the assembled board.
-* A prior driving demonstration of more than 30 minutes shows the robot worked
-  under unknown conditions. It does not show safety at full charge.
+* The driving demonstration of more than 30 minutes that we were told about
+  shows the robot worked under unknown conditions. It does not show safety at
+  full charge.
 
 Stage A: de-energized
 ---------------------
@@ -83,8 +83,7 @@ Battery disconnected, discharge connector open.
      - Pack label, BMS model, cell-level protection per datasheet
      - Documents only; do not open the pack
 
-Record the result, date and tester for each item in the project's private
-register.
+We record the result, date and tester for each item.
 
 Stage B: energized, idle, no motion
 -----------------------------------
@@ -147,17 +146,18 @@ reach; a capture instrument on the bus.
 Firmware readings
 -----------------
 
-Connecting to each controller with the Python API and only reading
+We read each controller over USB with the Python API, reading only
 (``vbus_voltage``, error registers, brake and bus settings), with no error
-clearing, configuration writes or state requests, gives the bus voltage as each
-board sees it. Its accuracy is unknown, so it must be cross-checked against
-items B3 and B4 and does not replace the meter.
+clearing, configuration writes or state requests. This gives the bus voltage as
+each board sees it. Its accuracy is unknown, so we cross-check it against items
+B3 and B4, and it does not replace the meter.
 
 Results log
 -----------
 
-2026-10-28, read-only firmware read of all four controllers, battery connected,
-drive stack not running. Eight samples over four seconds per board.
+On 2026-10-28 we read all four controllers over USB with the battery connected
+and the drive stack not running, taking eight samples over four seconds per
+board.
 
 .. list-table::
    :header-rows: 1
@@ -184,12 +184,12 @@ settings as loaded: brake resistor enabled **False**, configured brake
 resistance 0.47 ohm, ``dc_max_negative_current`` -5.0 A, DC bus overvoltage
 trip **32.0 V**, undervoltage trip 18.0 V, bus current 0.0 A.
 
-These are firmware values, not meter measurements. Observations:
+These are firmware values, not meter measurements. What we noticed:
 
 #. **The overvoltage trip (32 V) is above the 30 V MOSFET absolute maximum**
    (rating pending item A1). If the rating is right, the firmware protection
-   would trip only after the transistors' limit. It is not known whether 32 V
-   is the vendor default or was set by someone. It was not changed.
+   would trip only after the transistors' limit. We do not know whether 32 V
+   is the vendor default or was set by someone, and we have not changed it.
 #. **The brake resistor is disabled in firmware, and the configured resistance
    (0.47 ohm) does not match the fitted 2 ohm / 50 W parts** (items A8, C3).
    With it disabled, regeneration has no resistor to dump into and goes back to
@@ -200,8 +200,8 @@ These are firmware values, not meter measurements. Observations:
    charged 7S pack. Full charge reaches 29.4 V, and regeneration adds to either.
    The 0.35 V spread between boards at zero current suggests differences in ADC
    calibration, not real voltage drops; confirm with items B3 and B4.
-#. Zero errors is not evidence of a clean history: the stored errors were
-   cleared by a startup earlier the same day.
+#. A reading of zero errors is not evidence of a clean history: our drive
+   stack cleared the stored errors when it started earlier that day.
 
 Decision outcomes
 -----------------
@@ -211,13 +211,10 @@ The reviewer chooses; none is preselected.
 * **Rated:** the boards are rated for the 29.4 V case with documented margin.
   Record the evidence, update the documentation, keep the pack.
 * **Not rated:** choose a mitigation (a charge ceiling, compatible controllers,
-  or a power-architecture change). The team prefers to keep the pack,
+  or a power-architecture change). We prefer to keep the pack,
   controllers and chassis, so any change needs a full review of regeneration,
   peak current, BMS limits and fusing. Do not use a dropper resistor, diodes,
   an uneven cell tap, firmware voltage limits or partial charge as a permanent
   fix.
 * **Unknown:** keep the drive stack disabled, and the battery disconnected when
   the robot is not under supervision.
-
-Keep serial numbers, photographs and raw logs in the private register, not in
-this repository.

@@ -1,13 +1,13 @@
 Hardware photo findings — October 28, 2026
 ===========================================
 
-These observations come from the team's inspection photographs. The raw photos
-are not published in the public repository.
+These observations come from the photographs we took while inspecting the
+robot. We do not publish the raw photographs here.
 
 Controller identification
 -------------------------
 
-The team confirmed that four **distinct** ODESC V4.2 motor controllers are
+We confirmed that four **distinct** ODESC V4.2 motor controllers are
 shown, in upload order:
 
 .. list-table::
@@ -70,7 +70,7 @@ A close-up of the rear-left (RL) controller shows the marking JMT G3002B
 on multiple power-stage components. This corresponds to the JieJie
 Microelectronics JMTG3002B N-channel power MOSFET. Manufacturer
 documentation specifies a **30 V absolute-maximum drain-source voltage**.
-The team subsequently confirmed that **all four controllers are identical
+We subsequently confirmed that **all four controllers are identical
 hardware**. Thus the RL MOSFET identification is the working power-stage
 identification for FL, FR, RL and RR as well. Only the RL MOSFET
 markings were directly photographed in close-up; the other three have

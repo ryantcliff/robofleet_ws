@@ -22,6 +22,6 @@ Client
 Continuity statement
 --------------------
 
-RoboFleet is not presented as a from-scratch design by the current team. The
-team is responsible for understanding, validating, documenting, repairing, and
-extending the inherited platform.
+We are not presenting RoboFleet as a from-scratch design. We are responsible
+for understanding, validating, documenting, repairing, and extending the
+inherited platform.

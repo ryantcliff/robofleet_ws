@@ -1,9 +1,9 @@
 Requirements
 ============
 
-The 2026-2027 RoboFleet requirements document defines the current team's
-contractual scope. RoboFleet builds on the inherited RoboFlock platform; the
-current team is responsible for completing, validating, and improving the
+The 2026-2027 RoboFleet requirements document defines our
+contractual scope. RoboFleet builds on the inherited RoboFlock platform; we
+are responsible for completing, validating, and improving the
 system rather than claiming the inherited platform as new work.
 
 The required delivery is **one working FleetBot**. Multi-FleetBot coordination
