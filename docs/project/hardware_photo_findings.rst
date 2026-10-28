@@ -61,3 +61,28 @@ bearing arrangements before outdoor travel. Exposed boards/tray are
 not evidence of R-6 weather compliance.
 
 See the companion hardware audit checklist for pending tests.
+
+
+RL underside identification - October 28, 2026
+-----------------------------------------------
+
+A close-up of the rear-left (RL) controller shows the marking JMT G3002B
+on multiple power-stage components. This corresponds to the JieJie
+Microelectronics JMTG3002B N-channel power MOSFET. Manufacturer
+documentation specifies a **30 V absolute-maximum drain-source voltage**.
+This identification applies to RL; markings on FL, FR and RR have not
+yet been verified.
+
+The present HOT PAXX 7S motor pack is specified as 29.4 V fully
+charged. That provides only 0.6 V below the transistor's absolute
+maximum, even before switching and regenerative-braking transients.
+There is no acceptable engineering voltage margin for directly
+powering this RL board from the current pack. The 24V QC marking is
+consistent with a low-voltage ODESC variant.
+
+Keep the motor battery disconnected pending a reviewed compatible
+power architecture. The RL heat sink was removed for inspection;
+restore and verify its thermal interface before future operation.
+
+Reference: JieJie Microelectronics JMTG3002B datasheet, version 1.4.
+https://e-nexty.dxp.nexty-ele.com/product_files/download?maker_code=JJM&product_part_number=JMTG3002B&product_file_id=5467845&product_id=6198730&lc_code=ja&search_log_id=4389931
