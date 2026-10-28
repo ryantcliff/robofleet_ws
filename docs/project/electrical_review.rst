@@ -191,7 +191,8 @@ These are firmware values, not meter measurements. What we noticed:
    would trip only after the transistors' limit. We do not know whether 32 V
    is the vendor default or was set by someone, and we have not changed it.
 #. **The brake resistor is disabled in firmware, and the configured resistance
-   (0.47 ohm) does not match the fitted 2 ohm / 50 W parts** (items A8, C3).
+   (0.47 ohm) does not match the fitted 2 ohm / 50 W parts** (items A8, C3; A8 has since confirmed the resistors are fitted and
+   read 2 ohm).
    With it disabled, regeneration has no resistor to dump into and goes back to
    the pack, limited by ``dc_max_negative_current`` and by what the BMS and
    connector will accept. Whether the discharge port accepts charge current is
@@ -202,6 +203,19 @@ These are firmware values, not meter measurements. What we noticed:
    calibration, not real voltage drops; confirm with items B3 and B4.
 #. A reading of zero errors is not evidence of a clean history: our drive
    stack cleared the stored errors when it started earlier that day.
+
+Braking resistors (item A8)
+---------------------------
+
+On 2026-10-28 we checked the four braking resistors with the pack
+disconnected. **A8 is confirmed:** all four resistors are connected, and each
+reads 2 ohm, as labelled.
+
+This does not match the controller settings we read earlier, where the brake
+resistor is disabled and the configured resistance is 0.47 ohm. The hardware is
+ready for a brake-resistor setting, but the firmware does not yet use it. We
+will change the setting only after the reviewer approves the exact values, with
+the controllers powered and the robot on blocks.
 
 Decision outcomes
 -----------------
