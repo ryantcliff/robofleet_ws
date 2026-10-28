@@ -1,4 +1,4 @@
-2026–2027 Team
+2026-2027 Team
 ==============
 
 We are the 2026-2027 team continuing the previous RoboFlock team's work under the
@@ -7,12 +7,12 @@ new name **RoboFleet**.
 Team members
 ------------
 
-* Ryan Antcliff — University at Buffalo, CSE
-* Jesse Maldonado Ramos Carreto Perez Gramajo — University at Buffalo, CSE
-* Gaius-Richard Chidera Obimba — University at Buffalo, CSE
-* John Welgoss — University at Buffalo, CSE
-* Daniel Colosa — University at Buffalo, CSE
-* Nhat Dinh — University at Buffalo, CSE
+* Ryan Antcliff - University at Buffalo, CSE
+* Jesse Maldonado Ramos Carreto Perez Gramajo - University at Buffalo, CSE
+* Gaius-Richard Chidera Obimba - University at Buffalo, CSE
+* John Welgoss - University at Buffalo, CSE
+* Daniel Colosa - University at Buffalo, CSE
+* Nhat Dinh - University at Buffalo, CSE
 
 Client
 ------
