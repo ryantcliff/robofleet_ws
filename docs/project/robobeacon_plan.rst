@@ -45,7 +45,7 @@ Where it stands
    * - Outdoor test of the real link
      - :planned:`Not done`
      - Listed as the next step in :doc:`roadmap`.
-   * - Identity and pairing
+   * - Many robots, one beacon
      - :planned:`Not designed`
      - See below.
 
@@ -79,9 +79,10 @@ The radio link
 
 * The HC-12 pair is documented at about 1 km in the open, and that is a vendor claim we
   have not tested.
-* The beacon sends GGA at 5 Hz on 9600 baud with a fixed channel. Several beacons on
-  one channel would interfere, and a sentence from one beacon carries nothing that
-  says whose it is.
+* The beacon sends GGA at 5 Hz on 9600 baud on a fixed channel. With one beacon and
+  many robots, a single shared channel is what we want, since every HC-12 receiver on
+  that channel should hear the same transmission. We have only run one receiver so
+  far, so we should confirm that several receive it reliably.
 * We have not confirmed that our HC-12 power setting is legal in the US. See
   :doc:`burning_man`.
 
@@ -113,12 +114,19 @@ The robot already stops chasing when the beacon data goes stale (requirement R-3
 cases are not designed yet, for example someone setting the beacon down, handing it to
 another person, or walking into a crowd.
 
-Identity and pairing
-~~~~~~~~~~~~~~~~~~~~
+Many robots, one beacon
+~~~~~~~~~~~~~~~~~~~~~~~
 
-With one robot and one beacon this does not matter. With a fleet, each robot has to
-follow its own beacon. The HC-12 has 100 channels, so one channel per pair is possible,
-and an id inside the data stream is another option. We have not chosen either.
+The end goal is a single RoboBeacon that many FleetBots follow at the same time. That
+means the beacon does not need an id or a pairing step, because every robot listens to
+the same broadcast. Two things do need thought:
+
+* **Sharing the target.** Each robot is told to stop 3 m short of the same point, so
+  several robots would end up in the same place. They need different stand-off
+  positions or a queuing rule. This is part of the fleet awareness work, which is not
+  in this year's scope.
+* **One point of failure.** If the beacon fails or goes quiet, every robot stops
+  following. That makes its battery, its case and its indicators matter more.
 
 Staged plan
 -----------
@@ -128,7 +136,8 @@ Staged plan
 2. **Bench beacon and outdoor test.** Build the beacon from the parts we have, measure
    accuracy and radio range, and decide whether plain GPS is enough.
 3. **Turn it into an object.** Enclosure, power, switch, indicators, antenna and strap.
-4. **Pairing.** Choose how each robot knows its beacon.
+4. **Many robots, one beacon.** Check that several robots can receive the one beacon at
+   the same time, and decide how they share the stand-off.
 5. **Environment tests.** Dust, heat, cold and drops, using the conditions in
    :doc:`burning_man`.
 
@@ -165,5 +174,6 @@ Open decisions
 --------------
 
 * Is plain GPS accurate enough for a 1.5 to 3.0 m stand-off? We decide this after step 2.
-* Which pairing method do we use?
+* How do several robots share one beacon's stand-off without colliding? This is for a
+  later team.
 * Which parts of this belong in this year's scope, and which are left for the next team?
