@@ -9,6 +9,8 @@ Who we are, what we have to deliver, and where the robot stands.
    team
    requirements
    roadmap
+   burning_man
+   robobeacon_plan
    hardware_inventory
    hardware_audit_checklist
    electrical_review

@@ -38,6 +38,13 @@ has been tested on the robot. What we owe is one working FleetBot.
    * - Weather protection
      - :planned:`Formal requirement`
      - Light-rain / splash and alkaline-dust checks, plus a heat check
+   * - RoboBeacon as a carried object
+     - :planned:`No enclosure, power or indicators yet`
+     - Agree requirements with Tom, measure accuracy and range, then design the case.
+       See :doc:`robobeacon_plan`
+   * - Burning Man environment
+     - :planned:`Researched, not yet checked with the client`
+     - Raise licensing, radio limits and storm handling with Tom. See :doc:`burning_man`
    * - Full outdoor demo
      - :planned:`Final integration`
      - Follow, obstacle awareness, e-stop and handoff documentation
@@ -47,6 +54,14 @@ Schedule
 
 We plan to finish integration and documentation in March 2027. Final delivery
 is **no later than April 1, 2027**, per the requirements document.
+
+Beyond this year
+----------------
+
+RoboFleet is meant to grow into many FleetBots that know about each other and plan
+around each other. That is not part of what we owe this year. We keep it in mind so
+that we do not make it harder, for example by avoiding new fixed topic names. See
+:doc:`burning_man`.
 
 Keeping these docs honest
 -------------------------
