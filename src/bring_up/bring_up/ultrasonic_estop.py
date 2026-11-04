@@ -19,14 +19,19 @@ class UltrasonicLogic:
     it. Sensors with no reading in max_reading_age can't be trusted: they are
     ignored, or with fail_closed they call for a stop (forward motion blocked)
     so a dead or unplugged sensor can't leave the robot unguarded.
+
+    While the PS4 controller is driving (a joystick command arrived within
+    joystick_timeout) the brake is off: the operator is responsible for stopping.
     """
 
     def __init__(self, frame_ids, min_safe_distance, max_reading_age, required_readings,
-                 fail_closed=False):
+                 fail_closed=False, joystick_timeout=CMD_TIMEOUT):
         self.min_safe_distance = min_safe_distance
         self.max_reading_age = max_reading_age
         self.required_readings = required_readings
         self.fail_closed = fail_closed
+        self.joystick_timeout = joystick_timeout
+        self._last_joystick = None
         self._close_count = {frame_id: 0 for frame_id in frame_ids}
         self._last_reading = {}
 
@@ -36,6 +41,13 @@ class UltrasonicLogic:
         else:
             self._close_count[frame_id] = 0
         self._last_reading[frame_id] = now
+
+    def on_joystick(self, now):
+        self._last_joystick = now
+
+    def joystick_active(self, now):
+        return (self._last_joystick is not None
+                and now - self._last_joystick <= self.joystick_timeout)
 
     def stale(self, now):
         """Sensors with no reading in max_reading_age; they can't stop the robot."""
@@ -55,7 +67,12 @@ class UltrasonicLogic:
         return False
 
     def limit_forward(self, linear_x, now):
-        """Block forward motion while unsafe; reversing and turning stay allowed."""
+        """Block forward motion while unsafe; reversing and turning stay allowed.
+
+        Never blocks while the PS4 controller is driving.
+        """
+        if self.joystick_active(now):
+            return linear_x
         return min(linear_x, 0.0) if self.unsafe(now) else linear_x
 
 
@@ -103,6 +120,13 @@ class UltrasonicEstop(Node):
                 lambda msg, fid=frame_id: self._range_callback(msg, fid),
                 10)
 
+        # twist_mux gives /cmd_vel_joy priority whenever it is fresh, so a fresh
+        # message here means the PS4 controller is the operating input.
+        self.declare_parameter('joystick_topic', 'cmd_vel_joy')
+        self.create_subscription(
+            Twist, self.get_parameter('joystick_topic').value,
+            lambda _msg: self._logic.on_joystick(time.monotonic()), 10)
+
         self._last_cmd = None       # last command in, unmodified
         self._last_cmd_time = None
         self._last_out_x = 0.0      # linear.x last sent to the motors
@@ -131,7 +155,7 @@ class UltrasonicEstop(Node):
     def _check_and_publish(self):
         now = time.monotonic()
         stale = self._logic.stale(now)
-        if stale:
+        if stale and not self._logic.joystick_active(now):
             # These sensors can't be trusted; say so rather than fail silently.
             action = ('blocking forward motion' if self._logic.fail_closed
                       else 'not guarding those')
