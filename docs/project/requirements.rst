@@ -86,3 +86,14 @@ Key constraints
 * We do not promise the whole robot meets an IP rating.
 * Required work comes before optional extras like return-home, Meshtastic and
   extra autonomy.
+
+Client guidance
+---------------
+
+These come from conversations with our client and are not formal requirements. We
+list them so they are not lost, and we ask before changing the requirements above.
+
+* Tom told us the FleetBot is not expected to move in rain or in really windy
+  conditions. Wind kicks up dust that makes it hard to see, and rain turns the dust
+  into thick mud that builds up on the wheels and stops motion. Operators stop the
+  robot by procedure for now. See :doc:`burning_man`.
