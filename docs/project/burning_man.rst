@@ -181,9 +181,10 @@ What this means for each part of the robot
 Beyond this year: a fleet
 -------------------------
 
-RoboFleet is meant to become many FleetBots, each following its own RoboBeacon, and
-they will eventually need to know about each other and plan around each other. That
-is not in our scope. We note it so that what we build does not make it harder:
+RoboFleet is meant to become many FleetBots that all follow **one** RoboBeacon at the
+same time. They will eventually need to know about each other and plan around each
+other. That is not in our scope. We note it so that what we build does not make it
+harder:
 
 * Nav2 does not include multi-robot traffic handling. Its maintainers have said the
   field is not mature enough to include. Options people use are Open-RMF, or a
@@ -191,8 +192,14 @@ is not in our scope. We note it so that what we build does not make it harder:
 * Today our topics and frames are fixed names, such as ``/cmd_vel`` and
   ``/gps/beacon/fix``, so two robots on one network would collide. Using a robot id
   or namespace parameter would be the first step.
-* The RoboBeacon sends plain GPS sentences with no id, and the robot cannot tell which
-  beacon is which. See :doc:`robobeacon_plan` for pairing.
+* With one beacon and many robots, no robot needs a beacon id. Each one only has to
+  hear the same broadcast. See :doc:`robobeacon_plan`.
+* The harder problem is that every robot would aim for the same spot. Today a robot
+  stops 3 m short of the RoboBeacon, so several robots would converge on one point
+  and collide. They need different stand-off positions around or behind the carrier,
+  or a rule for queuing. We have not designed this.
+* The one beacon becomes a single point of failure. If its battery or radio fails, or
+  its data goes stale, every robot stops chasing at once.
 * A robot treating another robot as a moving obstacle in its costmap is the simplest
   form of awareness. Sharing each robot's position over a link is the next step.
 

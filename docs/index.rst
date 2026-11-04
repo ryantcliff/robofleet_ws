@@ -5,8 +5,8 @@ RoboFleet is our 2026-2027 continuation of **RoboFlock**, the autonomous rover
 built by the previous team. We kept the chassis and the ROS 2 software, and we
 are validating, repairing and extending them rather than starting over.
 
-The long-term idea is a group of **FleetBots** that each follow a person
-carrying a GPS **RoboBeacon**. What we owe our client this year is narrower: one
+The long-term idea is a group of **FleetBots** that all follow one person
+carrying a single GPS **RoboBeacon**. What we owe our client this year is narrower: one
 FleetBot that follows the RoboBeacon outdoors, can be stopped by an operator,
 and tolerates light rain and dust.
 
