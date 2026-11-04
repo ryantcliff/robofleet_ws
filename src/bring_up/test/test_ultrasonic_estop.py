@@ -142,3 +142,19 @@ def test_fail_closed_recovers_when_the_sensor_returns():
 def test_default_is_still_fail_open():
     assert not make().fail_closed
     assert not make().unsafe(now=5.0)
+
+
+def test_joystick_driving_turns_the_brake_off():
+    logic = blocked()
+    logic.on_joystick(now=0.1)
+    assert logic.limit_forward(0.5, now=0.2) == 0.5
+
+
+def test_brake_returns_when_joystick_goes_quiet():
+    logic = blocked()
+    logic.on_joystick(now=0.1)
+    assert logic.limit_forward(0.5, now=0.7) == 0.0
+
+
+def test_no_joystick_keeps_the_brake_on():
+    assert blocked().limit_forward(0.5, now=0.2) == 0.0
