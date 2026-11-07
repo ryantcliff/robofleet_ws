@@ -1,23 +1,7 @@
-# RoboFleet Read the Docs source
+# RoboFleet documentation
 
-This directory is the Sphinx source for the 2026–2027 RoboFleet documentation.
+**[ReadTheDocs](https://robofleet.readthedocs.io/en/latest/)** is the maintained, authoritative documentation website for RoboFleet. The source pages are version-controlled here in `docs/` and built using Sphinx.
 
-Published site: https://robofleet.readthedocs.io/en/latest/
+[DeepWiki](https://deepwiki.com/ryantcliff/robofleet_ws/) is a complementary, automatically generated interactive wiki for browsing and understanding repository code. We do **not** maintain DeepWiki separately or treat generated answers as verified hardware observations.
 
-## Local preview
-
-```bash
-python3 -m venv .venv-docs
-source .venv-docs/bin/activate
-pip install -r docs/requirements.txt
-sphinx-build -b html docs docs/_build/html
-python3 -m http.server -d docs/_build/html 8000
-```
-
-Open http://localhost:8000.
-
-## Read the Docs
-
-The repository root contains `.readthedocs.yaml`. Import the GitHub repository
-into Read the Docs once; afterward GitHub webhook builds can update the site
-automatically on pushes to the configured branch/version.
+To update a procedure or system specification, edit the relevant `.rst` page here, verify it against the repository and hardware records, and let ReadTheDocs rebuild from the appropriate branch. Do not duplicate long procedures in the top-level README.

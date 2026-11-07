@@ -1,56 +1,77 @@
 Beacon Following
 ================
 
-Following the beacon is the main thing we have to deliver. A person carries the
-**RoboBeacon**, and the **FleetBot** takes its latitude and longitude, turns it
-into a Nav2 target, and follows while keeping a safe distance.
+Following the beacon is our main deliverable. A person carries the
+**RoboBeacon** and a single **FleetBot** must follow at a safe stand-off.
+The required band is 1.5–3.0 m; the software currently targets 3 m.
 
 Data flow
 ---------
 
-::
+.. code-block:: text
 
-   NEO-M8P RoboBeacon --> HC-12 radio --> /gps/beacon/fix
-                                             |
-                                             v
-                                      beacon_goalpose
-                                             |
-                                             v
-                                      mission_manager
-                                             |
-                                             v
-                                           Nav2
+   NEO-M8P GPS -> HC-12 -> /gps/beacon/fix -> beacon_goalpose
+                                                    |
+                                                    v
+                                            mission_manager
+                                                    |
+                                                    v
+                                                   Nav2
 
-What it has to do
------------------
+`beacon_goalpose` converts latitude/longitude into a map-frame goal
+using navsat `/fromLL`. The code pulls distant targets inward so goals
+remain in the rolling local planning area. `mission_manager` selects
+follow/home/idle, cancels a follow goal when its target is stale (about
+3 seconds) or its mode changes, and publishes status.
 
-**Follow**
-   Stop about **1.5 to 3.0 m short of the RoboBeacon**. Our mission config aims
-   for 3 m, which is inside that range.
+Requirements and status
+-----------------------
 
-**Stale target**
-   If the RoboBeacon position goes stale or disappears, cancel the Nav2 goal
-   and stop chasing it.
+* **Follow:** settle approximately 1.5–3.0 m short of the beacon.
+* **Loss of data:** stop pursuit and cancel the goal when data go stale.
+* **Obstacle awareness:** use LiDAR and Nav2 for route planning.
+* **Operator stop:** commanded motion passes through the
+  :doc:`control_safety` chain.
+* **Status:** software path exists; outdoor end-to-end verification
+  has not yet been documented.
 
-**Obstacles**
-   Keep using the LiDAR and Nav2 so an obstacle in the planned path shows up
-   and the FleetBot does not drive into it on purpose.
+Hardware launch (not a safe no-power test)
+-----------------------------------------
 
-**Safety**
-   The final velocity still goes through the operator e-stop and the command
-   mux before it reaches the motors.
+.. warning::
 
-Return home
------------
+   The following commands connect to real sensors and, when
+   `follow:=true` is used, bring up the motor-control stack.
+   Do **not** run these on a powered FleetBot until the electrical
+   hazards and operator-stop procedure have been reviewed. See
+   :doc:`../project/electrical_review`.
 
-The return-home and Meshtastic features are still in the code and we may keep
-improving it, but it is not required this year unless the requirements get
-formally changed.
+.. code-block:: bash
 
-Simulation
-----------
+   ros2 launch bring_up bringup.launch.py follow:=true slam:=false
+
+Optional Meshtastic home station:
+
+.. code-block:: bash
+
+   ros2 launch bring_up bringup.launch.py \
+     follow:=true slam:=false station:=true
+
+The historical home node ID defaults to `!6c743480`. Return-home
+is inherited code, not required for the current delivery.
+
+Hardware-free simulated follow
+------------------------------
 
 .. code-block:: bash
 
    ros2 launch bring_up bringup.launch.py \
      follow:=true slam:=false hardware:=false sim:=true
+
+This uses a fake robot and beacon with real navigation/localization
+nodes. It does not establish real GPS accuracy, antenna calibration,
+radio reliability, safe braking or obstacle avoidance.
+
+Mode commands, radio IDs and beacon wiring are documented at
+:doc:`communications`. Real-world acceptance is defined by
+:doc:`../project/requirements`.
