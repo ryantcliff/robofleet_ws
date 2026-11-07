@@ -2,15 +2,10 @@
 
 This is our ROS 2 workspace for **RoboFleet**, an autonomous rover. This year we have to deliver one FleetBot that follows a GPS RoboBeacon using ROS 2 navigation and localization. The repo has the source code. The write-up, setup and architecture are on the documentation site below.
 
-**[Read the full documentation »](https://robofleet.readthedocs.io/en/latest/)**
-
 > **Name note:** RoboFleet is our 2026-2027 continuation of RoboFlock. Many inherited ROS, config and device names still say `roboflock`. We left them so we do not break things that work.
 
 <!-- Add a short demo clip or photo of the robot here:
 ![RoboFleet](docs/roboflock.jpg) -->
-
-Here is the robot running SLAM:
-https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed
 
 ## What it does
 - Autonomous navigation with **Nav2**, **SLAM** and `robot_localization`, using **LiDAR + GPS**.
@@ -21,8 +16,15 @@ https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed
 - Runs on an **NVIDIA Jetson Orin Nano** with custom power and motor wiring.
 - Weather protection is a requirement: supervised light rain, splashes and wind-blown alkaline dust. We are not claiming an IP rating for the whole robot.
 
-## Project Diagram
+## Project Documentation
+### ReadTheDocs
+Go to our **[ReadTheDocs](https://robofleet.readthedocs.io/en/latest/)** page for the latest project information.
+### DeepWiki
+Go to our **[DeepWiki](https://deepwiki.com/ryantcliff/robofleet_ws/)** page for an interactive project documentation experience.
+### Project Diagram
 [![Architecture diagram of ryantcliff/robofleet_ws](https://gitdiagram.com/ryantcliff/robofleet_ws/diagram.png)](https://gitdiagram.com/ryantcliff/robofleet_ws?utm_source=readme&utm_medium=picture)
+### SLAM Demo
+Watch **[this](https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed)** video to see the FleetBot running SLAM.
 
 ## Stack
 ROS 2 Humble · C++ / Python · Nav2 · SLAM · robot_localization · ODrive · LiDAR · GPS (u-blox) · HC-12 · Meshtastic · NVIDIA Jetson Orin Nano
