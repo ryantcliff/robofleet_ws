@@ -35,13 +35,13 @@ Where it stands
    * - Beacon parts
      - :inherited:`Inherited`
      - A SparkFun NEO-M8P-2-12 and a pair of HC-12 radios, in
-       :doc:`hardware_inventory`. Wiring is in the README.
+       :doc:`hardware_inventory`. Wiring and radio settings are in :doc:`../concepts/communications`.
    * - Beacon firmware
      - Not needed today
      - The NEO-M8P feeds the HC-12 directly, so nothing runs on the beacon itself.
    * - Enclosure, power, switch, indicators
      - :planned:`Not built`
-     - Nothing exists yet. The README says power comes from a power bank.
+     - Nothing exists yet. The inherited bench wiring calls for a 5 V power bank; see :doc:`../concepts/communications`.
    * - Outdoor test of the real link
      - :planned:`Not done`
      - Listed as the next step in :doc:`roadmap`.
@@ -89,7 +89,7 @@ The radio link
 Power
 ~~~~~
 
-* The README feeds both modules from a 5 V power bank. Some power banks switch off when
+* The inherited wiring recipe feeds both modules from a 5 V power bank. Some power banks switch off when
   the load is small. We have not tested whether ours stays on with this load, or how
   long it lasts.
 * Heat and cold both limit battery performance, and the beacon will be carried in the

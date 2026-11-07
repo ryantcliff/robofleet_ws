@@ -89,3 +89,11 @@ Stable device names
 The repo has udev rules so the devices keep fixed paths, like ``/dev/ublox_gps``
 and ``/dev/rplidar_usb``. If you change a sensor or USB adapter, check its
 vendor and product ID again.
+
+Additional commissioning steps
+------------------------------
+
+The ordered checklists, safe startup gates, serial device rules and GPS/radio
+verification steps are maintained at :doc:`../tutorials/commissioning`.
+The communication wiring and historical radio IDs are at
+:doc:`../concepts/communications`.

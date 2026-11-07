@@ -1,8 +1,8 @@
 Concepts
 ========
 
-How the ROS 2 side of the robot is put together, and how the main pieces
-(localization, beacon following, obstacle detection) talk to each other.
+How the ROS 2 side of the robot is put together, and how its localization,
+beacon following, radios, obstacle sensors and motor safety chain interact.
 
 .. toctree::
    :maxdepth: 1
@@ -10,4 +10,6 @@ How the ROS 2 side of the robot is put together, and how the main pieces
    ros2
    navigation
    beacon_following
+   communications
    obstacle_detection
+   control_safety
