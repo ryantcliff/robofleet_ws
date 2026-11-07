@@ -21,6 +21,9 @@ https://github.com/user-attachments/assets/d75cb297-7618-43ef-b84b-9466528e4aed
 - Runs on an **NVIDIA Jetson Orin Nano** with custom power and motor wiring.
 - Weather protection is a requirement: supervised light rain, splashes and wind-blown alkaline dust. We are not claiming an IP rating for the whole robot.
 
+## Project Diagram
+[![Architecture diagram of ryantcliff/robofleet_ws](https://gitdiagram.com/ryantcliff/robofleet_ws/diagram.png)](https://gitdiagram.com/ryantcliff/robofleet_ws?utm_source=readme&utm_medium=picture)
+
 ## Stack
 ROS 2 Humble · C++ / Python · Nav2 · SLAM · robot_localization · ODrive · LiDAR · GPS (u-blox) · HC-12 · Meshtastic · NVIDIA Jetson Orin Nano
 
