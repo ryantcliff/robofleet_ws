@@ -2,7 +2,7 @@ Motion command flow and operator safety
 =======================================
 
 This page documents the intended ROS 2 control chain, as implemented in
-`src/bring_up/launch/bringup.launch.py`. It does not certify that the
+``src/bring_up/launch/bringup.launch.py``. It does not certify that the
 hardware provides a safety-rated stop.
 
 .. code-block:: text
@@ -27,17 +27,17 @@ Safety and motion components
 
    * - Component
      - Implemented behavior
-   * - `twist_mux`
+   * - ``twist_mux``
      - Selects Nav2 or PS4 joystick velocity; joystick commands have priority.
-   * - `ultrasonic_estop`
+   * - ``ultrasonic_estop``
      - Blocks **forward** motion for near or stale front-sonar measurements.
        Defaults include a 0.5 m obstacle threshold and fail-closed handling.
        Turning and reverse are still permitted.
-   * - `e_stop`
+   * - ``e_stop``
      - PS4 Cross stops; Options arms; loss of controller messages for about
        0.5 s commands a software stop.
-   * - `diff_drive_controller`
-     - Consumes `/cmd_vel_safe`, idles on software e-stop and commands zero
+   * - ``diff_drive_controller``
+     - Consumes ``/cmd_vel_safe``, idles on software e-stop and commands zero
        after about 0.5 s without a valid motion command.
 
 Refer to :doc:`obstacle_detection` for the sensor-specific logic and

@@ -18,9 +18,9 @@ Data flow
                                                     v
                                                    Nav2
 
-`beacon_goalpose` converts latitude/longitude into a map-frame goal
-using navsat `/fromLL`. The code pulls distant targets inward so goals
-remain in the rolling local planning area. `mission_manager` selects
+``beacon_goalpose`` converts latitude/longitude into a map-frame goal
+using navsat ``/fromLL``. The code pulls distant targets inward so goals
+remain in the rolling local planning area. ``mission_manager`` selects
 follow/home/idle, cancels a follow goal when its target is stale (about
 3 seconds) or its mode changes, and publishes status.
 
@@ -41,7 +41,7 @@ Hardware launch (not a safe no-power test)
 .. warning::
 
    The following commands connect to real sensors and, when
-   `follow:=true` is used, bring up the motor-control stack.
+   ``follow:=true`` is used, bring up the motor-control stack.
    Do **not** run these on a powered FleetBot until the electrical
    hazards and operator-stop procedure have been reviewed. See
    :doc:`../project/electrical_review`.
@@ -57,7 +57,7 @@ Optional Meshtastic home station:
    ros2 launch bring_up bringup.launch.py \
      follow:=true slam:=false station:=true
 
-The historical home node ID defaults to `!6c743480`. Return-home
+The historical home node ID defaults to ``!6c743480``. Return-home
 is inherited code, not required for the current delivery.
 
 Hardware-free simulated follow

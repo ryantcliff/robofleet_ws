@@ -8,11 +8,11 @@ Nav2 appears frozen; TF extrapolation
 -------------------------------------
 
 A previously observed **possible** ROS 2 Humble / tf2 interaction
-(reported against `tf2_ros` 0.25.23) involves lidar scans timestamped
+(reported against ``tf2_ros`` 0.25.23) involves lidar scans timestamped
 ahead of available transforms. Symptoms include costmap warnings about
 "extrapolation into the future" and navigation updates stopping.
 
-There has been a suspected `MessageFilter` / `testTransformableRequests`
+There has been a suspected ``MessageFilter`` / ``testTransformableRequests``
 deadlock in this setup, but a matching warning by itself is **not**
 conclusive proof of a deadlock.
 
@@ -25,8 +25,8 @@ Start with non-invasive checks:
    ros2 run tf2_ros tf2_echo odom base_link
    ros2 node list
 
-Compare `/scan` header timestamps, the ROS clock source, and available TF
-timestamps. Verify `use_sim_time` versus actual `/clock` configuration.
+Compare ``/scan`` header timestamps, the ROS clock source, and available TF
+timestamps. Verify ``use_sim_time`` versus actual ``/clock`` configuration.
 Do not force timestamps backward just to hide an error; determine the
 source of clock/driver delay first. The simulation has historically
 timestamped fake lidar scans around 0.1 s in the past, which should not
@@ -45,7 +45,7 @@ Ultrasonic failsafe not guarding
 --------------------------------
 
 Confirm the real Arduino shows up, its serial publisher is running,
-the three sonar topics are fresh, and `ultrasonic_estop` is in
+the three sonar topics are fresh, and ``ultrasonic_estop`` is in
 fail-closed mode. A ROS test with fake sensor data is not a substitute
 for unplug/replug and obstacle tests. See
 :doc:`../concepts/obstacle_detection`.

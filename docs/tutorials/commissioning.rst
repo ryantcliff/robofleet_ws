@@ -17,19 +17,19 @@ instrument/command, and whether it passed or remains unverified.
   fuses and four ODESC controllers with :doc:`../project/hardware_inventory`.
 * Check cables, fuse markings, battery label, polarity and mounting
   **without disturbing energized connectors**.
-* Check whether `roboflock-drive.service` is installed/enabled; it can
+* Check whether ``roboflock-drive.service`` is installed/enabled; it can
   start the joystick/motor software automatically. Do not activate it
   during inspection.
-* Check serial-device enumeration with `lsusb`, `ls -l /dev/serial/by-id`
-  and `dmesg`. Prefer non-invasive observations.
+* Check serial-device enumeration with ``lsusb``, ``ls -l /dev/serial/by-id``
+  and ``dmesg``. Prefer non-invasive observations.
 
 2. Serial device names and permissions
 --------------------------------------
 
 The inherited rule file is
-`src/bring_up/udev/99-roboflock.rules`. It maps device IDs to
-`/dev/ublox_gps`, `/dev/rplidar_usb`, `/dev/meshtastic` and
-`/dev/arduino_nano`. Match USB identifiers against the real
+``src/bring_up/udev/99-roboflock.rules``. It maps device IDs to
+``/dev/ublox_gps``, ``/dev/rplidar_usb``, ``/dev/meshtastic`` and
+``/dev/arduino_nano``. Match USB identifiers against the real
 hardware **before** installing rules; broad 0666 permissions in the
 inherited file deserve a separate security review.
 
@@ -55,16 +55,16 @@ read-only diagnostic step.
   0.16 m forward and 0.63 m above ground, by physical measurement and URDF.
 * Install and mount a BNO085-class IMU before depending on GPS heading.
   Check I2C bus/address, orientation, magnetic declination and ENU yaw.
-* Verify real lidar scan timestamps, `/scan` frame and TF.
+* Verify real lidar scan timestamps, ``/scan`` frame and TF.
 * Check that Arduino ultrasonic data resumes after unplug/replug, and that
   a missing sensor fails closed as intended.
-* Record five minutes of stationary `/odometry/global` to measure drift
+* Record five minutes of stationary ``/odometry/global`` to measure drift
   **only after** localization has a valid heading and GPS fix.
 
 4. RoboBeacon and optional home station
 ---------------------------------------
 
-* Verify NEO-M8P GGA output and received `/gps/beacon/fix` messages.
+* Verify NEO-M8P GGA output and received ``/gps/beacon/fix`` messages.
 * Check radio range, missing-data timeout and GPS stand-off accuracy.
 * If testing the optional Meshtastic path, verify the ROBT/HOME/TOM radio
   settings, command delivery and outdoor HOME position.
