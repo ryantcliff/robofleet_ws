@@ -36,7 +36,7 @@ Requirements and status
   has not yet been documented.
 
 Hardware launch (not a safe no-power test)
------------------------------------------
+------------------------------------------
 
 .. warning::
 
