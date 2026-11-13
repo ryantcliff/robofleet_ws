@@ -43,8 +43,8 @@ Where it stands
      - :planned:`Not built`
      - Nothing exists yet. The inherited bench wiring calls for a 5 V power bank; see :doc:`../concepts/communications`.
    * - Outdoor test of the real link
-     - :planned:`Not done`
-     - Listed as the next step in :doc:`roadmap`.
+     - :planned:`Partly done`
+     - First test on 2026-11-13, see :doc:`beacon_outdoor_test`. Range and the beacon-loss stop are not tested.
    * - Many robots, one beacon
      - :planned:`Not designed`
      - See below.
@@ -61,11 +61,14 @@ Accuracy against the stand-off
 
 The beacon sends ordinary GPS sentences, and the robot uses its own GPS. Our stand-off
 is 1.5 to 3.0 m. Ordinary single-receiver GPS can be off by a few meters, which is the
-same size as the distance we are trying to hold. We have not measured this on our
-hardware. This is the most important thing to find out first, because it decides
-whether the current parts are enough.
+same size as the distance we are trying to hold. Our first outdoor test on 2026-11-13
+(:doc:`beacon_outdoor_test`) found errors of that size. The beacon's position moved by 3 to
+4 m between still windows at the same spot, and the distance between the beacon and the
+robot's GPS wandered by about 0.8 to 1.3 m around the true value, with spikes. That is one
+site and one day, so we treat it as a first look, but it points toward needing something
+better than plain GPS.
 
-If they are not, the options to evaluate are:
+If a repeat test agrees, the options to evaluate are:
 
 * **Keep plain GPS** and accept a looser stand-off, if the measured error allows it.
 * **RTK between the beacon and the robot**, where the two receivers correct each other.
@@ -79,6 +82,9 @@ The radio link
 
 * The HC-12 pair is documented at about 1 km in the open, and that is a vendor claim we
   have not tested.
+* In the first outdoor test a loose jumper between the NEO-M8P and the HC-12 cut the fix
+  rate from 5 per second to as low as 1.5 per second. Securing the connectors fixed it.
+  The final beacon needs soldered or locking connectors, and not jumper wires.
 * The beacon sends GGA at 5 Hz on 9600 baud on a fixed channel. With one beacon and
   many robots, a single shared channel is what we want, since every HC-12 receiver on
   that channel should hear the same transmission. We have only run one receiver so
@@ -134,7 +140,8 @@ Staged plan
 1. **Agree requirements with Tom.** Who carries it, runtime on one charge, range, night
    visibility, and how a stranger starts, stops and hands it off.
 2. **Bench beacon and outdoor test.** Build the beacon from the parts we have, measure
-   accuracy and radio range, and decide whether plain GPS is enough.
+   accuracy and radio range, and decide whether plain GPS is enough. We did a first pass on
+   2026-11-13. Radio range and a repeat at another site and time remain.
 3. **Turn it into an object.** Enclosure, power, switch, indicators, antenna and strap.
 4. **Many robots, one beacon.** Check that several robots can receive the one beacon at
    the same time, and decide how they share the stand-off.
@@ -173,7 +180,8 @@ How we will check it
 Open decisions
 --------------
 
-* Is plain GPS accurate enough for a 1.5 to 3.0 m stand-off? We decide this after step 2.
+* Is plain GPS accurate enough for a 1.5 to 3.0 m stand-off? Our first test says probably
+  not. We decide after a repeat at another site and time.
 * How do several robots share one beacon's stand-off without colliding? This is for a
   later team.
 * Which parts of this belong in this year's scope, and which are left for the next team?
