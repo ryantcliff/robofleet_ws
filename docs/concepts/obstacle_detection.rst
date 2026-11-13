@@ -21,6 +21,13 @@ starts. Previously the node ignored silent sensors, so a missing Arduino left
 the robot with no backup and only a log warning. Setting ``fail_closed:=false``
 restores that behavior.
 
+**The brake is off while the PS4 controller is driving.** ``ultrasonic_estop`` also
+listens to ``/cmd_vel_joy``. While joystick commands keep arriving (each one counts
+for 0.5 s), it passes forward motion through unchanged, so a person driving by hand
+is never blocked by a sensor reading. Half a second after the last joystick command
+the brake applies again, so follow mode and Nav2 always keep it. The topic name is the
+``joystick_topic`` parameter.
+
 This is a last-resort backstop for obstacles the LiDAR cannot see, such as
 objects below its scan plane. It does not replace the LiDAR.
 

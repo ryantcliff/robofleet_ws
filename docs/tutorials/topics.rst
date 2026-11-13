@@ -31,7 +31,8 @@ The main topics we use:
      - What ``twist_mux`` picked (joystick wins over Nav2)
    * - ``/cmd_vel_safe``
      - ``/cmd_vel_mux`` after ``ultrasonic_estop`` has blocked forward motion if
-       needed. This is what the motor controller listens to.
+       needed (it does not block while ``/cmd_vel_joy`` is active). This is what the
+       motor controller listens to.
    * - ``/e_stop``
      - Armed / stopped flag from ``e_stop``
    * - ``/range/left_ultrasonic``, ``center``, ``right``

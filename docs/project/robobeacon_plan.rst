@@ -41,7 +41,7 @@ Where it stands
      - The NEO-M8P feeds the HC-12 directly, so nothing runs on the beacon itself.
    * - Enclosure, power, switch, indicators
      - :planned:`Not built`
-     - Nothing exists yet. The inherited bench wiring calls for a 5 V power bank; see :doc:`../concepts/communications`.
+     - Nothing exists yet. Today the beacon is only a NEO-M8P-2 with an HC-12 on jumper wires, powered from a laptop's USB port. The inherited bench wiring calls for a 5 V power bank; see :doc:`../concepts/communications`.
    * - Outdoor test of the real link
      - :planned:`Partly done`
      - First test on 2026-11-13, see :doc:`beacon_outdoor_test`. Range and the beacon-loss stop are not tested.
@@ -50,8 +50,10 @@ Where it stands
      - See below.
 
 So the robot side of following is largely there, and the beacon side is a bench
-wiring recipe. Nothing here has been tested outdoors, so none of it counts as working
-until we have done that.
+wiring recipe. We have built the beacon from the parts and tested the radio link and
+the fix accuracy outdoors once (:doc:`beacon_outdoor_test`). Following with the real
+beacon, range, and the beacon-loss stop are still untested, so those do not count as
+working yet.
 
 What we still have to settle
 ----------------------------
@@ -95,7 +97,8 @@ The radio link
 Power
 ~~~~~
 
-* The inherited wiring recipe feeds both modules from a 5 V power bank. Some power banks switch off when
+* Our outdoor test powered the beacon from a laptop's USB port, so no power bank has been tried.
+  The inherited wiring recipe feeds both modules from a 5 V power bank. Some power banks switch off when
   the load is small. We have not tested whether ours stays on with this load, or how
   long it lasts.
 * Heat and cold both limit battery performance, and the beacon will be carried in the

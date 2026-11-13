@@ -93,7 +93,7 @@ What we have identified
    * - RF-015
      - 1
      - u-blox ANN-MB2-00-00 active multiband GNSS antenna.
-     - Inspected. Which receiver it is cabled to is not confirmed.
+     - Inspected. It is the FleetBot's antenna.
    * - RF-016
      - 1
      - SparkFun u-blox NEO-M8P-2-12 receiver (the RoboBeacon).
@@ -101,7 +101,7 @@ What we have identified
    * - RF-017
      - 1
      - u-blox ANN-MB-00-00 L1/L2 active GNSS antenna.
-     - Inspected. Which receiver it is cabled to is not confirmed.
+     - Inspected. It is the RoboBeacon's antenna.
    * - RF-018
      - 2
      - HC-12 433 MHz serial radios.

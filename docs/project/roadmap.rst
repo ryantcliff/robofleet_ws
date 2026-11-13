@@ -16,10 +16,12 @@ has been tested on the robot. What we owe is one working FleetBot.
      - Repeat on the final robot image
    * - RoboBeacon reception
      - :ready:`Integration path present`
-     - Outdoor test: valid fixes become goals
+     - Real beacon fixes reached the robot outdoors on 2026-11-13 (:doc:`beacon_outdoor_test`).
+       Next: check that they become goals on the robot
    * - Beacon-follow distance
      - :ready:`Current target is 3 m`
-     - Open-field test with a moving beacon; check we land in 1.5-3.0 m
+     - Open-field test with a moving beacon; check we land in 1.5-3.0 m. Plain GPS
+       error measured on 2026-11-13 was 1 to 4 m, so this is at risk
    * - Beacon-loss stop
      - :ready:`Logic present`
      - Cut the RoboBeacon updates and check it stops
@@ -39,8 +41,8 @@ has been tested on the robot. What we owe is one working FleetBot.
      - :planned:`Formal requirement`
      - Light-rain / splash and alkaline-dust checks, plus a heat check
    * - RoboBeacon as a carried object
-     - :planned:`No enclosure, power or indicators yet`
-     - Agree requirements with Tom, measure accuracy and range, then design the case.
+     - :planned:`Bench beacon works; no enclosure, power or indicators yet`
+     - Agree requirements with Tom, repeat the accuracy test, measure range, then design the case.
        See :doc:`robobeacon_plan`
    * - Burning Man environment
      - :planned:`Researched, not yet checked with the client`
