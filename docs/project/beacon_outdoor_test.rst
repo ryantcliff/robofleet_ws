@@ -28,7 +28,8 @@ We have not seen a real fix, measured accuracy, or measured range.
 Before you go out
 -----------------
 
-* [ ] The power bank is charged, and it is not one that shuts off at a small load.
+* [ ] The beacon's power source is ready. A power bank must be charged and must not be
+  one that shuts off at a small load. A laptop's USB port also works.
 * [ ] The beacon is wired as in the README, the HC-12 antenna is attached, and the
   GNSS antenna is connected. Note which antenna you used (RF-015 or RF-017).
 * [ ] The robot is powered and its HC-12 is connected to ``/dev/ttyTHS1``.
@@ -127,8 +128,10 @@ How we ran it
 ~~~~~~~~~~~~~
 
 The robot stayed in one place with its receiver running and its own GPS logging at 1 Hz.
-We recorded the beacon's fixes on the robot, and marked each phase by hand. We carried the
-whole beacon on a laptop held at chest height, with the GPS antenna on top of it. We could
+We recorded the beacon's fixes on the robot, and marked each phase by hand. The beacon was
+the bare bench assembly, a NEO-M8P-2 with an HC-12 attached by jumper wires and no case. It
+was powered over USB from a laptop. We carried it on that laptop held at chest height, with
+the GPS antenna on top of it, so no power bank was tested. We could
 only measure 27 ft 9 in (8.46 m) on the ground, so point B is 8.46 m from point A and not
 10 m. Sky conditions were 8 to 10 satellites, with an HDOP between 1.8 and 4.4.
 
@@ -140,8 +143,8 @@ only measure 27 ft 9 in (8.46 m) on the ground, so point B is 8.46 m from point 
      - Result
      - Notes
    * - Antenna used
-     - Not recorded
-     - We did not write down whether it was RF-015 or RF-017.
+     - RF-017 on the beacon, RF-015 on the robot
+     -
    * - Time to first fix
      - Not timed
      - A fix was already present at our first check.

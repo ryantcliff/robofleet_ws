@@ -20,6 +20,8 @@ The documented bench connection is:
    NEO-M8P GND ---------> HC-12 GND (shared)
    5 V power bank ------> NEO-M8P USB power and HC-12 VCC
 
+Our 2026-11-13 outdoor test powered the beacon over USB from a laptop instead.
+
 Check the **actual board markings, voltage limits and logic levels** before
 connecting wires. The HC-12 SET pin is normally left unconnected in this
 inherited setup. The assumed link settings are 9600 baud, channel 001, FU3

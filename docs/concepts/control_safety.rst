@@ -32,7 +32,8 @@ Safety and motion components
    * - ``ultrasonic_estop``
      - Blocks **forward** motion for near or stale front-sonar measurements.
        Defaults include a 0.5 m obstacle threshold and fail-closed handling.
-       Turning and reverse are still permitted.
+       Turning and reverse are still permitted. It does not block while the PS4
+       controller is driving (see :doc:`obstacle_detection`).
    * - ``e_stop``
      - PS4 Cross stops; Options arms; loss of controller messages for about
        0.5 s commands a software stop.

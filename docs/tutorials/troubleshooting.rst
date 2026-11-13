@@ -46,7 +46,8 @@ Ultrasonic failsafe not guarding
 
 Confirm the real Arduino shows up, its serial publisher is running,
 the three sonar topics are fresh, and ``ultrasonic_estop`` is in
-fail-closed mode. A ROS test with fake sensor data is not a substitute
+fail-closed mode. The brake never acts while the PS4 controller is driving, so test
+it with Nav2 or follow commands. A ROS test with fake sensor data is not a substitute
 for unplug/replug and obstacle tests. See
 :doc:`../concepts/obstacle_detection`.
 
