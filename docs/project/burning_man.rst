@@ -120,12 +120,23 @@ Radio, GPS and connectivity
 * **Licensed channels.** Burning Man Project holds licensed radio channels for its
   own use. One emergency channel is open to anyone for real emergencies only.
   Participants are responsible for following FCC rules for their own radios.
-* **Our radios.** The HC-12 modules are 433 MHz and default to a maximum power of
-  100 mW. We have **not** confirmed what the United States allows on that band for
-  this kind of link (47 CFR 15.231 is where to look). A third-party article from
-  September 2026 also reports that the default Meshtastic settings in the US may
-  not comply with FCC rule 15.247. We have not checked either one against the
-  rules, so treat both as open items.
+* **Our radios.** We read the FCC rules and the guidance around them in November
+  2026. Both of our radio links look doubtful under US rules. The FCC has not ruled
+  on either case, so this is our reading and not a legal answer. Somebody should
+  confirm it before the event.
+
+  * **HC-12 beacon link (433 MHz).** This band falls under 47 CFR 15.231, which is
+    written for occasional transmissions such as remote controls and alarms. Several
+    application notes say a continuous data link does not qualify. Our beacon sends a
+    position 5 times a second for as long as it is on, and the HC-12 defaults to
+    100 mW. The final beacon may need a different radio or band. This matters more
+    than the Meshtastic issue, because the beacon link is the core of following.
+  * **Meshtastic (915 MHz).** 47 CFR 15.247 requires at least 500 kHz of bandwidth
+    for digital modulation in 902 to 928 MHz. Our nodes use the default LONG_FAST
+    preset, which uses 250 kHz, so it likely falls short. Meshtastic's 2.8 release
+    moves new US nodes to the 500 kHz LONG_TURBO preset, but at the time of writing
+    2.8.1 was still an alpha. ROBT, TOM and HOME must all use the same preset, so
+    they have to change together. We have not changed them.
 
 People and crowds
 -----------------
@@ -215,7 +226,9 @@ For Tom:
 
 For us:
 
-* Does the HC-12 setup meet the US limits for the 433 MHz band?
+* Which radio should the final beacon use, given that a continuous HC-12 link likely
+  does not fit 47 CFR 15.231?
+* When should we move the Meshtastic nodes to a 500 kHz preset?
 * How well does the RPLIDAR S2 do in blowing dust?
 * Should the robot stop automatically in high wind, rain or heavy dust?
 
@@ -231,6 +244,11 @@ Sources
 * `2023 rain and mud (NPR) <https://www.npr.org/2023/09/02/1197441202/burning-man-festival-rains-floods-stranded-nevada>`__
 * `Participant emergency reporting, 2026 <https://burningman.org/wp-content/uploads/2026/08/BRC-Participant-Emergency-Reporting-2026.08.05.pdf>`__
 * `FCC ISM rules and LoRa mesh (Hackaday, 2026) <https://hackaday.com/2026/09/17/fcc-ism-rules-may-shatter-lora-mesh-communities/>`__
+* `47 CFR 15.231 (Cornell LII) <https://www.law.cornell.edu/cfr/text/47/15.231>`__
+* `Short-range device regulations (Analog Devices) <https://www.analog.com/en/resources/technical-articles/where-to-go-for-regulations-concerning-shortrange-devices-srd.html>`__
+* `Data transmissions under Part 15.231 (TE AN-00128) <https://www.te.com/content/dam/te-com/documents/appliances/global/AN-00128%20-%20Data%20and%20Bidirectional%20Transmissions%20under%20Part%2015.231%20-%208-20-12.pdf>`__
+* `FCC Part 15.247: the 500 kHz minimum and LoRa mesh (NodakMesh) <https://nodakmesh.org/blog/fcc-15-247-500khz-lora>`__
+* `Let's talk about 2.8 (Meshtastic) <https://meshtastic.org/blog/lets-talk-about-2-8/>`__
 * `Nav2 Route Server discussion <https://discourse.ros.org/t/nav2-request-for-comment-route-server/28410/14>`__
 * `Open-RMF traffic management interfaces <https://discourse.openrobotics.org/t/traffic-management-interfaces-for-the-next-generation/44414/>`__
 * `LiDAR disturbances by airborne particles <https://arxiv.org/pdf/2105.04193>`__
