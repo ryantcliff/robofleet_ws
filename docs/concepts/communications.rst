@@ -84,6 +84,7 @@ on ``/robot/status``. The implemented modes include ``follow``, ``home``,
 
 The GPS-to-goal and command-control pipelines are documented at
 :doc:`beacon_following` and :doc:`control_safety`. Test loss of messages
-and watchdog behavior before operating outdoors. HC-12 radio range and
-regulatory compliance are **not yet verified**; see
-:doc:`../project/robobeacon_plan`.
+and watchdog behavior before operating outdoors. HC-12 radio range is **not
+yet verified**, see :doc:`../project/robobeacon_plan`. Both the HC-12 link and the
+default Meshtastic preset look doubtful under US rules; see
+:doc:`../project/burning_man`.

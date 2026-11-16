@@ -91,8 +91,9 @@ The radio link
   many robots, a single shared channel is what we want, since every HC-12 receiver on
   that channel should hear the same transmission. We have only run one receiver so
   far, so we should confirm that several receive it reliably.
-* We have not confirmed that our HC-12 power setting is legal in the US. See
-  :doc:`burning_man`.
+* A continuous HC-12 link at 433 MHz likely does not fit the US rule for that band
+  (47 CFR 15.231), which is written for occasional transmissions. The final beacon may
+  need a different radio or band. See :doc:`burning_man`.
 
 Power
 ~~~~~
