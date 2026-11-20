@@ -1,5 +1,14 @@
 # Gazebo Ignition Migration Summary
 
+> **Current state (2026-11-20):** how to run the simulation is in
+> `docs/tutorials/simulation.rst` (`scripts/sim.sh gazebo`). Since this summary
+> was written: the package is `urdf_description` (lowercase); the merge conflict
+> left in `launch/gazebo.launch.py` is resolved; the CAD tree is rotated so the
+> wheels drive along +x; the diff-drive radius/separation match the meshes;
+> odometry is bridged to `/odometry/local` and TF straight to `/tf` (no
+> `topic_tools` relay); joint states come from Gazebo; and the robot spawns in
+> `worlds/test_yard.sdf`. The topic table and usage below are historical.
+
 ## Overview
 This document summarizes the changes made to migrate the URDF_description package from Gazebo Classic to Gazebo Ignition (Gazebo Fortress/Garden).
 
@@ -58,13 +67,13 @@ This document summarizes the changes made to migrate the URDF_description packag
 ### Build the package:
 ```bash
 cd ~/ros2_ws
-colcon build --packages-select URDF_description
+colcon build --packages-select urdf_description
 source install/setup.bash
 ```
 
 ### Launch in Gazebo Ignition:
 ```bash
-ros2 launch URDF_description gazebo.launch.py
+ros2 launch urdf_description gazebo.launch.py
 ```
 
 ### Control the robot:

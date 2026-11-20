@@ -6,19 +6,19 @@
 <xacro:include filename="$(find urdf_description)/urdf/URDF.gazebo" />
 <link name="base_link">
   <inertial>
-    <origin xyz="-1.77225813799248e-10 0.05072131681281721 0.4480565147938018" rpy="0 0 0"/>
+    <origin xyz="-0.05072131681281721 -1.77225813799248e-10 0.4480565147938018" rpy="0 0 ${pi/2}"/>
     <mass value="112.90683233392802"/>
     <inertia ixx="3.845852" iyy="3.434291" izz="6.503588" ixy="-0.0" iyz="-0.032901" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
     <geometry>
       <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
     <geometry>
       <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -396,9 +396,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.31883 0.381158 -0.013819" rpy="0 0 0"/>
+    <origin xyz="0.0662 -0.0000 -0.0001" rpy="0 ${pi/2} 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/wheel_left_front_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.1825" length="0.1325"/>
     </geometry>
   </collision>
 </link>
@@ -417,9 +417,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.32003 -0.381158 -0.013819" rpy="0 0 0"/>
+    <origin xyz="0.0662 0.0000 -0.0001" rpy="0 ${pi/2} 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/wheel_left_rear_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.1825" length="0.1325"/>
     </geometry>
   </collision>
 </link>
@@ -438,9 +438,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.31883 -0.381158 -0.013819" rpy="0 0 0"/>
+    <origin xyz="-0.0662 0.0000 -0.0001" rpy="0 ${pi/2} 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/wheel_right_rear_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.1825" length="0.1325"/>
     </geometry>
   </collision>
 </link>
@@ -459,9 +459,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.31883 0.381158 -0.013819" rpy="0 0 0"/>
+    <origin xyz="-0.0662 -0.0000 -0.0001" rpy="0 ${pi/2} 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/wheel_right_front_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.1825" length="0.1325"/>
     </geometry>
   </collision>
 </link>
@@ -550,7 +550,7 @@
 </joint>
 
 <joint name="diff_bar_joint" type="fixed">
-  <origin xyz="0.0 -0.355 0.4791" rpy="0 0 0"/>
+  <origin xyz="0.355 0.0 0.4791" rpy="0 0 ${pi/2}"/>
   <parent link="base_link"/>
   <child link="diff_bar_1"/>
 </joint>
@@ -562,13 +562,13 @@
 </joint>
 
 <joint name="right_rocker_joint" type="fixed">
-  <origin xyz="-0.28213 0.0 0.2931" rpy="0 0 0"/>
+  <origin xyz="0.0 -0.28213 0.2931" rpy="0 0 ${pi/2}"/>
   <parent link="base_link"/>
   <child link="bracket_right_1"/>
 </joint>
 
 <joint name="left_rocker_joint" type="fixed">
-  <origin xyz="0.28213 0.0 0.2931" rpy="0 0 0"/>
+  <origin xyz="0.0 0.28213 0.2931" rpy="0 0 ${pi/2}"/>
   <parent link="base_link"/>
   <child link="bracket_left_1"/>
 </joint>
@@ -678,7 +678,7 @@
 </joint>
 
 <joint name="hull_to_frame" type="fixed">
-  <origin xyz="0.160015 -0.293904 0.5241" rpy="0 0 0"/>
+  <origin xyz="0.293904 0.160015 0.5241" rpy="0 0 ${pi/2}"/>
   <parent link="base_link"/>
   <child link="hull_mid_1"/>
 </joint>
@@ -692,7 +692,8 @@
 <joint name="lidar_joint" type="fixed">
   <parent link="hull_top_1"/>
   <child link="lidar_link"/>
-  <origin xyz="-0.2999999663283473 0 0.25" rpy="0 0 0"/> 
+  <!-- -90 deg undoes the CAD-tree rotation, so lidar_link stays aligned with base_link -->
+  <origin xyz="-0.2999999663283473 0 0.25" rpy="0 0 ${-pi/2}"/>
 </joint>
 
 </robot>

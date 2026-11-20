@@ -34,6 +34,8 @@ colcon build --symlink-install --executor sequential
 source install/setup.bash
 ~~~
 
+To run the hardware-free tests or the Gazebo simulation, including over SSH and with several people at once: `scripts/sim.sh test` or `scripts/sim.sh gazebo` ([Simulation and Unit Tests](https://robofleet.readthedocs.io/en/latest/tutorials/simulation.html)).
+
 The inherited Jetson clone may still be located at `~/roboflock_ws`; use the existing directory if so. A successful build is **not** evidence that the physical robot is safe to drive.
 
 ## Documentation Map

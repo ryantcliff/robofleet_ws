@@ -17,7 +17,7 @@ def main():
         parser.error('domain-id must be in 0..101')
     os.environ['ROS_DOMAIN_ID'] = str(args.domain_id)
     os.environ['ROS_LOCALHOST_ONLY'] = '1'
-    os.environ['ROS_LOG_DIR'] = '/tmp/roboflock-beacon-ros'
+    os.environ.setdefault('ROS_LOG_DIR', '/tmp/roboflock-beacon-ros')
 
     import rclpy
     from rclpy.qos import qos_profile_sensor_data
