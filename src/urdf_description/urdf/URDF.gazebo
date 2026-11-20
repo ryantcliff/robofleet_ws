@@ -3,49 +3,52 @@
 
 <xacro:property name="body_color" value="Gazebo/Silver" />
 
-<!-- Gazebo Ignition Diff Drive Plugin -->
+<!-- Gazebo Fortress (ROS 2 Humble's Gazebo) plugins. Only the simulator reads
+     these; the real robot ignores <gazebo> tags. Topics are Gazebo topics, and
+     gazebo.launch.py bridges them to ROS:
+       /cmd_vel (in)  /odom -> /odometry/local  /tf  /joint_states  /scan  /clock
+     Geometry matches the URDF meshes (wheel radius 0.1825 m, contact patches
+     0.77 m apart). The measured robot is 0.125 m / 0.74 m (see
+     bring_up/diff_drive_controller.py), so the CAD model is not to scale. -->
 <gazebo>
   <plugin filename="ignition-gazebo-diff-drive-system"
           name="ignition::gazebo::systems::DiffDrive">
-
-    <!-- Four wheels via two left/right pairs -->
     <left_joint>lf_wheel_to_coupling</left_joint>
     <left_joint>lr_wheel_to_coupling</left_joint>
     <right_joint>rf_wheel_to_coupling</right_joint>
     <right_joint>rr_wheel_to_coupling</right_joint>
 
-    <wheel_separation>0.64</wheel_separation>
-    <wheel_radius>0.1</wheel_radius>
+    <wheel_separation>0.77</wheel_separation>
+    <wheel_radius>0.1825</wheel_radius>
 
-    <!-- Gazebo-internal topic names (NOT ROS topics) -->
-    <topic>cmd_vel</topic>
-    <odom_topic>odom</odom_topic>
+    <topic>/cmd_vel</topic>
+    <odom_topic>/odom</odom_topic>
+    <tf_topic>/tf</tf_topic>
     <frame_id>odom</frame_id>
     <child_frame_id>base_link</child_frame_id>
+    <odom_publish_frequency>30</odom_publish_frequency>
 
     <max_linear_velocity>1.0</max_linear_velocity>
     <max_angular_velocity>2.0</max_angular_velocity>
     <max_linear_acceleration>1.0</max_linear_acceleration>
     <max_angular_acceleration>1.5</max_angular_acceleration>
-    <max_wheel_torque>10</max_wheel_torque>
-    <max_wheel_acceleration>1.0</max_wheel_acceleration>
-
   </plugin>
 
-  <!-- Needed to publish TF odom->base_link into Gazebo -->
-  <plugin filename="ignition-gazebo-pose-publisher-system"
-          name="ignition::gazebo::systems::PosePublisher">
-    <publish_link_pose>true</publish_link_pose>
-    <publish_nested_model_pose>true</publish_nested_model_pose>
+  <!-- Real wheel angles, so RViz/Foxglove spin the wheels. -->
+  <plugin filename="ignition-gazebo-joint-state-publisher-system"
+          name="ignition::gazebo::systems::JointStatePublisher">
+    <topic>/joint_states</topic>
   </plugin>
 </gazebo>
 
-<!-- Lidar Sensor for Gazebo Ignition -->
+<!-- 2D lidar standing in for the RPLIDAR A1. The world file loads the
+     Sensors system that renders it. -->
 <gazebo reference="lidar_link">
   <sensor name="lidar" type="gpu_lidar">
+    <ignition_frame_id>lidar_link</ignition_frame_id>
     <pose>0 0 0 0 0 0</pose>
     <always_on>true</always_on>
-    <visualize>true</visualize>
+    <visualize>false</visualize>
     <update_rate>10</update_rate>
     <topic>/scan</topic>
     <lidar>
@@ -62,10 +65,12 @@
         <max>12.0</max>
         <resolution>0.01</resolution>
       </range>
+      <noise>
+        <type>gaussian</type>
+        <mean>0.0</mean>
+        <stddev>0.01</stddev>
+      </noise>
     </lidar>
-    <plugin filename="ignition-gazebo-sensors-system"
-            name="ignition::gazebo::systems::Sensors">
-    </plugin>
   </sensor>
 </gazebo>
 
@@ -74,7 +79,7 @@
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
+  <self_collide>false</self_collide>
   <gravity>true</gravity>
 </gazebo>
 
@@ -87,7 +92,7 @@
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
   <fdir1>1 0 0</fdir1>
-  <self_collide>true</self_collide>
+  <self_collide>false</self_collide>
 </gazebo>
 
 <gazebo reference="wheel_left_rear_1">
@@ -99,7 +104,7 @@
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
   <fdir1>1 0 0</fdir1>
-  <self_collide>true</self_collide>
+  <self_collide>false</self_collide>
 </gazebo>
 
 <gazebo reference="wheel_right_rear_1">
@@ -111,7 +116,7 @@
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
   <fdir1>1 0 0</fdir1>
-  <self_collide>true</self_collide>
+  <self_collide>false</self_collide>
 </gazebo>
 
 <gazebo reference="wheel_right_front_1">
@@ -123,7 +128,7 @@
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
   <fdir1>1 0 0</fdir1>
-  <self_collide>true</self_collide>
+  <self_collide>false</self_collide>
 </gazebo>
 
 </robot>

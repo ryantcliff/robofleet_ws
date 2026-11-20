@@ -35,6 +35,8 @@
   <exec_depend>joy</exec_depend>
   <exec_depend>ultrasonic_pkg</exec_depend>
   <exec_depend>beacon_pkg</exec_depend>
+  <!-- Browser visualisation (mapping_foxglove.launch.py, sim.launch.py foxglove:=true) -->
+  <exec_depend>foxglove_bridge</exec_depend>
   <!-- odrive (motor control) is a PyPI package, not a ROS dependency -
        install separately: pip install odrive -->
 
