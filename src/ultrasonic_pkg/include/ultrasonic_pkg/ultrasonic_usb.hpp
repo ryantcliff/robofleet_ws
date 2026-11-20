@@ -20,6 +20,7 @@ const uint8_t idx_rightdata  = 6;
 const uint8_t idx_stop 		 = 7;
 
 const unsigned char REQUEST[] = { 0xBE };
+const int REPLY_TIMEOUT_MS = 60;  // measured replies: 15-35 ms
 
 int init_arduino (void);
 void get_arduino_data (uint8_t *, uint8_t *, uint8_t *);

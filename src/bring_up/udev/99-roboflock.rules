@@ -1,0 +1,20 @@
+# Stable device names for the robot's serial devices.
+# Install: sudo cp 99-roboflock.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules && sudo udevadm trigger
+
+# SparkFun GPS-RTK2 (u-blox ZED-F9P), native USB -> /dev/ublox_gps
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1546", ATTRS{idProduct}=="01a9", MODE="0666", SYMLINK+="ublox_gps"
+
+# RPLidar (CP2102 USB-UART bridge) -> /dev/rplidar_usb
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE="0666", SYMLINK+="rplidar_usb"
+
+# LILYGO T-Beam Meshtastic node (CH9102 USB-UART) -> /dev/meshtastic
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", MODE="0666", SYMLINK+="meshtastic"
+
+# Ultrasonic Arduino Nano (FT232RL, matched by serial so other FTDI adapters
+# don't take the name) -> /dev/arduino_nano
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="AQ02VLE4", MODE="0666", SYMLINK+="arduino_nano"
+
+# PS4 controller (DualShock 4, USB or Bluetooth). joy_node reads the event
+# device through SDL, which is root:input 0660 and only ACL'd to the desktop
+# session, so a headless roboflock user can't open it.
+SUBSYSTEM=="input", KERNEL=="event*|js*", ATTRS{id/vendor}=="054c", ATTRS{id/product}=="05c4|09cc", MODE="0666"

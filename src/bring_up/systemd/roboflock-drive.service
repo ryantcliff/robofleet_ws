@@ -1,0 +1,32 @@
+# Start the joystick drive stack (bring_up.sh) at boot.
+# Install: sudo cp roboflock-drive.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now roboflock-drive
+# Logs:    journalctl -u roboflock-drive -f
+#
+# Safe to start unattended: e_stop starts ENGAGED and latches, so the robot
+# stays still until Options is pressed on the controller. The controller can
+# connect after boot (joy_node picks it up when it appears).
+
+[Unit]
+Description=Roboflock joystick drive stack
+After=network.target
+
+[Service]
+Type=simple
+User=roboflock
+Group=roboflock
+# Match ~/.bashrc so ros2 CLI tools in a terminal can see these nodes.
+Environment=HOME=/home/roboflock
+Environment=ROS_DOMAIN_ID=0
+Environment=ROS_LOCALHOST_ONLY=1
+ExecStart=/home/roboflock/roboflock_ws_follow/src/bring_up/bring_up/bring_up.sh
+# SIGINT to every node in the group, like Ctrl+C in a terminal.
+KillMode=control-group
+KillSignal=SIGINT
+TimeoutStopSec=15
+# The script exits when diff_drive_controller does (e.g. ODrives not yet
+# enumerated at boot); retry until the hardware is there.
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

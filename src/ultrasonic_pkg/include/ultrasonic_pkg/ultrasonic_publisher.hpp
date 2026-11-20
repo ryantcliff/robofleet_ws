@@ -17,11 +17,13 @@ class UltrasonicPublisher : public rclcpp::Node
 		void declare_parameters();
 		rcl_interfaces::msg::SetParametersResult on_parameter_change(const std::vector<rclcpp::Parameter> & parameters);
 		bool initialize_sensors();
+		void start_publishing();
 		void publish_data();
 		void timer_callback();
 		
 		// Publisher Variables
-		rclcpp::TimerBase::SharedPtr timer_;	std::vector<rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr> publishers_;
+		rclcpp::TimerBase::SharedPtr timer_;
+		rclcpp::TimerBase::SharedPtr retry_timer_;	std::vector<rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr> publishers_;
 		std::vector<uint8_t> sensor_data_;
 		std::vector<sensor_msgs::msg::Range> sensor_msgs_;
 		
